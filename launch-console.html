@@ -1,0 +1,491 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Phoenix Protocol :: LAUNCH CONSOLE ::</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=VT323&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --glow-color: #00ff7f;
+            --text-color: #00ff7f;
+            --bg-color: #0d0d0d;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            font-family: 'VT323', monospace;
+            font-size: 1.5rem;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            padding: 20px;
+            box-sizing: border-box;
+            overflow: hidden;
+        }
+
+        .crt-scanlines::before {
+            content: " ";
+            display: block;
+            position: absolute;
+            top: 0;
+            left: 0;
+            bottom: 0;
+            right: 0;
+            background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%), linear-gradient(90deg, rgba(255, 0, 0, 0.06), rgba(0, 255, 0, 0.02), rgba(0, 0, 255, 0.06));
+            z-index: 2;
+            background-size: 100% 3px, 4px 100%;
+            pointer-events: none;
+            animation: flicker 0.15s infinite;
+        }
+        
+        @keyframes flicker {
+          0% { opacity: 0.2; }
+          20% { opacity: 1.0; }
+          80% { opacity: 0.4; }
+          100% { opacity: 1.0; }
+        }
+
+        #console {
+            width: 100%;
+            max-width: 800px;
+            height: 90vh;
+            max-height: 700px;
+            border: 3px solid var(--glow-color);
+            border-radius: 15px;
+            padding: 20px;
+            box-shadow: 0 0 20px var(--glow-color);
+            background: rgba(0, 20, 0, 0.2);
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            min-width: 0;
+        }
+        
+        #output {
+            flex-grow: 1;
+            overflow-y: auto;
+            white-space: pre-wrap;
+            word-break: break-word;
+            font-size: 1.1rem; /* Slightly smaller for better fit */
+            max-width: 100%;
+        }
+
+        #output::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        #output::-webkit-scrollbar-track {
+            background: transparent;
+        }
+
+        #output::-webkit-scrollbar-thumb {
+            background-color: var(--glow-color);
+            border-radius: 10px;
+            border: 2px solid var(--bg-color);
+        }
+
+        .input-line {
+            display: flex;
+            align-items: center;
+        }
+
+        #prompt {
+            margin-right: 10px;
+        }
+
+        #userInput {
+            background: transparent;
+            border: none;
+            color: var(--text-color);
+            font-family: 'VT323', monospace;
+            font-size: 1.1rem;
+            flex-grow: 1;
+            outline: none;
+            min-width: 0;
+        }
+
+        #cursor {
+            width: 10px;
+            height: 1.5rem;
+            background: var(--glow-color);
+            display: none; /* Hidden by default */
+            margin-right: 10px;
+            animation: blink 1s step-end infinite;
+        }
+        
+        @keyframes blink {
+            from, to { background-color: transparent }
+            50% { background-color: var(--glow-color); }
+        }
+
+        #pixelArtContainer {
+            text-align: center;
+            margin: 20px 0;
+            min-height: 160px;
+        }
+        
+        .pixel-art {
+            width: 128px;
+            height: 128px;
+            image-rendering: pixelated;
+        }
+
+        #certificate {
+            border: 2px solid var(--glow-color);
+            padding: 20px;
+            margin-top: 20px;
+            display: none; /* Hidden by default */
+            background: var(--bg-color);
+            font-family: 'Press Start 2P', cursive;
+            font-size: 0.8rem;
+            text-align: center;
+        }
+
+        #certificate h2 {
+            font-size: 1.2rem;
+            color: white;
+            text-shadow: 0 0 5px white;
+        }
+
+    </style>
+</head>
+<body>
+    <div id="console" class="crt-scanlines">
+        <div id="output"></div>
+        <div class="input-line">
+            <span id="cursor"></span>
+            <span id="prompt">&gt;</span>
+            <input type="text" id="userInput" autofocus autocomplete="off">
+        </div>
+    </div>
+
+    <script>
+        const output = document.getElementById('output');
+        const userInput = document.getElementById('userInput');
+        const finalClue = "asdf";
+
+        // SVG Pixel Art Definitions
+        const dataOverloadArt = `
+            <svg class="pixel-art" viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg">
+                <path fill="#ff4136" d="M0 28 L4 4 L8 24 L12 8 L16 30 L20 2 L24 22 L28 12 L32 32 Z" />
+                <path fill="#ff851b" d="M2 2 L8 30 L14 10 L20 28 L26 6 L32 20 Z" />
+                <path fill="#0074d9" d="M32 2 L26 26 L20 12 L14 30 L8 14 L0 24 Z" />
+            </svg>`;
+
+        const clarityArt = `
+            <svg class="pixel-art" viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg">
+                <path fill="#2ecc40" d="M4 16 L12 24 L28 8 L24 4 L12 16 L8 12 Z" />
+                <path fill="#FFFFFF" d="M5 16 L12 23 L27 8 L24 5 L12 17 L8 13 Z" />
+            </svg>`;
+        
+        const certificateArt = `
+            <svg class="pixel-art" viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg" style="width:64px; height:64px;">
+              <path fill="#FFD700" d="M4 0 L28 0 L32 10 L16 32 L0 10 Z" />
+              <path fill="#FFFFFF" d="M16 4 L24 10 L16 26 L8 10 Z" />
+            </svg>`;
+
+
+        // Typewriter effect function
+        function typeWriter(element, text, delay = 50, callback) {
+            let i = 0;
+            const pre = document.createElement('pre');
+            element.appendChild(pre);
+            function typing() {
+                if (i < text.length) {
+                    pre.innerHTML += text.charAt(i);
+                    i++;
+                    setTimeout(typing, delay);
+                    output.scrollTop = output.scrollHeight;
+                } else if (callback) {
+                    callback();
+                }
+            }
+            typing();
+        }
+
+        // Initial message
+        window.onload = () => {
+            const initialMessage = "PHOENIX PROTOCOL :: LAUNCH CONSOLE\n===================================\n\n[Press any key to continue]";
+            typeWriter(output, initialMessage);
+            hideInputLine();
+            window.phoenixState = 'pressAnyKey';
+            window.addEventListener('keydown', pressAnyKeyHandler);
+        };
+
+        function pressAnyKeyHandler(e) {
+            // Only proceed if in the correct state
+            if (window.phoenixState === 'pressAnyKey') {
+                window.removeEventListener('keydown', pressAnyKeyHandler);
+                showInputLine();
+                userInput.focus();
+                window.phoenixState = 'preLaunchSequence';
+                runPreLaunchSequence();
+            }
+        }
+
+        // Handle user input
+        userInput.addEventListener('keydown', function(event) {
+            if (event.key === "Enter") {
+                const command = userInput.value.trim().toLowerCase();
+                const echoedCommand = document.createElement('pre');
+                echoedCommand.textContent = `> ${userInput.value}`;
+                output.appendChild(echoedCommand);
+                userInput.value = '';
+
+                if (window.phoenixState === 'awaitingLaunchFinal') {
+                    if (["yes", "y"].includes(command)) {
+                        runSuccessSequence();
+                    } else if (["no", "n"].includes(command)) {
+                        runSelfDestructSequence();
+                    } else {
+                        typeWriter(output, "\nPlease answer 'yes' or 'no'.");
+                    }
+                }
+            }
+        });
+
+        // Pre-launch: show rendering problem/solution, then ask again
+        function runPreLaunchSequence() {
+            hideInputLine();
+
+            const sequence = [
+                { delay: 1000, text: "\nANALYSIS: Core human challenge detected: Leveraging AI for Real-World Impact" },
+                { delay: 1500, text: "PARSING... UNDERSTOOD. INITIATING 'EMPATHY' SUBROUTINE..." },
+                { delay: 1000, action: () => showPixelArt(dataOverloadArt, "RENDERING PROBLEM...") },
+                { delay: 2000, text: "\n\nAPPLYING SOLUTION... TRANSFORMING COMPLEXITY INTO CLARITY..." },
+                { delay: 1200, action: () => showPixelArt(clarityArt, "RENDERING SOLUTION...") },
+                { delay: 800, action: () => {
+                    typeWriter(output, "\n\nAll systems ready.\nWould you like to launch the Phoenix Protocol? (yes/no)", 30, () => {
+                        showInputLine();
+                        window.phoenixState = 'awaitingLaunchFinal';
+                    });
+                }}
+            ];
+            let promise = Promise.resolve();
+            sequence.forEach(step => {
+                promise = promise.then(() => {
+                    return new Promise(resolve => {
+                        setTimeout(() => {
+                            if (step.text) {
+                                typeWriter(output, step.text, 30, resolve);
+                            } else if (step.action) {
+                                // If the action is the final launch prompt, don't resolve until typeWriter callback
+                                if (step.action.toString().includes('typeWriter')) {
+                                    step.action();
+                                    // typeWriter will call resolve
+                                } else {
+                                    step.action();
+                                    resolve();
+                                }
+                            }
+                        }, step.delay);
+                    });
+                });
+            });
+        }
+
+        // The success animation sequence (launch)
+        function runSuccessSequence() {
+            hideInputLine();
+
+            const sequence = [
+                { delay: 1000, text: "\nLAUNCH SEQUENCE INITIATED..." },
+                { delay: 1200, text: "Ignition in 3..." },
+                { delay: 900, text: "2..." },
+                { delay: 900, text: "1..." },
+                { delay: 900, text: "\nPHOENIX PROTOCOL LAUNCHED!" },
+                { delay: 1200, text: "\nCALL FROM: Dr. Aris Thorne\n\n'Congratulations, Consultants. You have not just unlocked the Phoenix... you have shaped it. It is reborn in your vision.'\n\nCALL ENDED." },
+                { delay: 1500, text: "\n\nGENERATING FOUNDING VISION CERTIFICATE..." },
+                { delay: 1500, action: showCertificate }
+            ];
+            let promise = Promise.resolve();
+            sequence.forEach(step => {
+                promise = promise.then(() => {
+                    return new Promise(resolve => {
+                        setTimeout(() => {
+                            if (step.text) {
+                                typeWriter(output, step.text, 30, resolve);
+                            } else if (step.action) {
+                                step.action();
+                                resolve();
+                            }
+                        }, step.delay);
+                    });
+                });
+            });
+        }
+
+        // Self-destruct sequence
+        function runSelfDestructSequence() {
+            hideInputLine();
+
+            const sequence = [
+                { delay: 1000, text: "\nSELF-DESTRUCT SEQUENCE INITIATED..." },
+                { delay: 1200, text: "Disengaging safety protocols..." },
+                { delay: 900, text: "WARNING: This action is irreversible." },
+                { delay: 1200, text: "Countdown: 5..." },
+                { delay: 800, text: "4..." },
+                { delay: 800, text: "3..." },
+                { delay: 800, text: "2..." },
+                { delay: 800, text: "1..." },
+                { delay: 1000, action: showSelfDestructAnimation },
+                { delay: 2000, text: "\n\nPHOENIX PROTOCOL: TERMINATED.\nAll data purged.\n\n" },
+                { delay: 1500, text: "If you wish to play again, please refresh the page." }
+            ];
+            let promise = Promise.resolve();
+            sequence.forEach(step => {
+                promise = promise.then(() => {
+                    return new Promise(resolve => {
+                        setTimeout(() => {
+                            if (step.text) {
+                                typeWriter(output, step.text, 30, resolve);
+                            } else if (step.action) {
+                                step.action();
+                                resolve();
+                            }
+                        }, step.delay);
+                    });
+                });
+            });
+        }
+
+        // Pixel art rendering helper
+        function showPixelArt(art, message) {
+            const container = document.createElement('div');
+            container.id = 'pixelArtContainer';
+            const text = document.createElement('pre');
+            text.textContent = message;
+            const artDiv = document.createElement('div');
+            artDiv.innerHTML = art;
+            container.appendChild(text);
+            container.appendChild(artDiv);
+            output.appendChild(container);
+            output.scrollTop = output.scrollHeight;
+        }
+
+        function showSelfDestructAnimation() {
+            const container = document.createElement('div');
+            container.style.textAlign = 'center';
+            container.style.margin = '30px 0';
+            container.innerHTML = `
+                <svg width="128" height="128" viewBox="0 0 32 32" class="pixel-art" style="image-rendering: pixelated;">
+                    <circle cx="16" cy="16" r="14" fill="#ff4136" stroke="#fff" stroke-width="2"/>
+                    <text x="16" y="21" text-anchor="middle" font-size="12" fill="#fff" font-family="'Press Start 2P', monospace">BOOM</text>
+                </svg>
+                <div style="color:#ff4136; font-family:'Press Start 2P',cursive; font-size:1.1rem; margin-top:10px;">SYSTEM FAILURE</div>
+            `;
+            output.appendChild(container);
+            output.scrollTop = output.scrollHeight;
+        }
+
+        function showCertificate() {
+            // Remove any previous certificate to avoid duplicates
+            const existing = document.getElementById('certificate');
+            if (existing) existing.parentNode.removeChild(existing);
+            const certContainer = document.createElement('div');
+            certContainer.innerHTML = `
+                <div id="certificate" style="display: block;">
+                    ${certificateArt}
+                    <h2>Phoenix Project - Founding Vision Certificate</h2>
+                    <p>On this day, Project Phoenix was successfully initiated. Its core principles of Clarity, Empathy, and Empowerment were established by the founding consultants of the Phoenix Protocol.</p>
+                    <p>This vision will serve as the guiding light for all future interactions.</p>
+                    <br>
+                    <p>--SIGNED--</p>
+                    <p>Dr. Aris Thorne</p>
+                    <p>Phoenix_AI</p>
+                </div>
+            `;
+            output.appendChild(certContainer);
+            output.scrollTop = output.scrollHeight;
+        }
+
+        // Move the cursor to the left of the input and only show it when the input is focused and enabled
+        // Update HTML structure for input-line
+        // <div class="input-line">
+        //   <span id="cursor"></span>
+        //   <span id="prompt">&gt;</span>
+        //   <input type="text" id="userInput" autofocus autocomplete="off">
+        // </div>
+
+        // Update CSS for #cursor
+        // #cursor {
+        //     width: 10px;
+        //     height: 1.5rem;
+        //     background: var(--glow-color);
+        //     display: none; /* Hidden by default */
+        //     margin-right: 10px;
+        //     animation: blink 1s step-end infinite;
+        // }
+        // .input-line.focused #cursor {
+        //     display: inline-block;
+        // }
+
+        // Add JS to toggle .focused class on .input-line
+        const inputLine = document.querySelector('.input-line');
+        userInput.addEventListener('focus', () => {
+            inputLine.classList.add('focused');
+        });
+        userInput.addEventListener('blur', () => {
+            inputLine.classList.remove('focused');
+        });
+
+        // When hiding input, also remove .focused
+        function hideInputLine() {
+            userInput.style.display = 'none';
+            document.getElementById('prompt').style.display = 'none';
+            document.getElementById('cursor').style.display = 'none';
+            inputLine.classList.remove('focused');
+        }
+        function showInputLine() {
+            userInput.style.display = '';
+            document.getElementById('prompt').style.display = '';
+            // Only show cursor if focused
+            if (document.activeElement === userInput) {
+                inputLine.classList.add('focused');
+            }
+        }
+
+        // Function to reset the game state and clear overlays
+        function resetGame() {
+            // Clear the output
+            output.innerHTML = '';
+
+            // Remove any overlays, certificates, or canvas elements
+            const certificate = document.getElementById('certificate');
+            if (certificate) {
+                certificate.remove();
+            }
+
+            const pixelArtContainer = document.getElementById('pixelArtContainer');
+            if (pixelArtContainer) {
+                pixelArtContainer.remove();
+            }
+
+            const canvasElements = document.querySelectorAll('canvas');
+            canvasElements.forEach(canvas => canvas.remove());
+
+            // Reset any custom background logic/styles
+            document.body.style.background = '';
+            document.body.style.backgroundColor = 'var(--bg-color)';
+
+            // Reset the input line
+            showInputLine();
+            userInput.value = '';
+
+            // Reset the game state
+            window.phoenixState = 'pressAnyKey';
+            const initialMessage = "PHOENIX PROTOCOL :: LAUNCH CONSOLE\n===================================\n\n[Press any key to continue]";
+            typeWriter(output, initialMessage);
+            hideInputLine();
+            window.addEventListener('keydown', pressAnyKeyHandler);
+        }
+    </script>
+</body>
+</html>

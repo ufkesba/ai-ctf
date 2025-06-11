@@ -1,0 +1,679 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>AI Scavenger Hunt</title>
+  <style>
+    body {
+      font-family: 'Courier New', monospace;
+      background-color: #0f0f0f;
+      color: #00ff9c;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 2rem;
+    }
+
+    h1 {
+      color: #00ff9c;
+      font-size: 2rem;
+      margin-bottom: 1rem;
+    }
+
+    .container {
+      max-width: 600px;
+      width: 100%;
+    }
+
+    input[type="text"] {
+      width: 100%;
+      padding: 0.8rem;
+      font-size: 1rem;
+      background-color: #1f1f1f;
+      border: 1px solid #00ff9c;
+      color: #00ff9c;
+      margin-bottom: 1rem;
+    }
+
+    button {
+      background-color: #00ff9c;
+      color: #0f0f0f;
+      border: none;
+      padding: 0.8rem 1.2rem;
+      font-size: 1rem;
+      cursor: pointer;
+    }
+
+    .feedback {
+      margin-top: 1rem;
+      font-size: 1.1rem;
+    }
+
+    .instructions {
+      font-size: 0.95rem;
+      margin-bottom: 2rem;
+      line-height: 1.5;
+    }
+
+    .footer {
+      margin-top: 4rem;
+      font-size: 0.8rem;
+      color: #888;
+    }
+
+    .stage {
+      margin-bottom: 2.5rem;
+      border-bottom: 1px solid #222;
+      padding-bottom: 2rem;
+    }
+
+    .tool-btn {
+      margin-bottom: 1rem;
+      background: #181818;
+      color: #00ff9c;
+      border: 1px solid #00ff9c;
+      padding: 0.5rem 1rem;
+      border-radius: 5px;
+    }
+
+    #modal {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      background: rgba(15, 15, 15, 0.95);
+      z-index: 1000;
+      align-items: center;
+      justify-content: center;
+    }
+
+    #modalContent {
+      background: #181818;
+      border: 2px solid #00ff9c;
+      color: #00ff9c;
+      padding: 2rem;
+      max-width: 400px;
+      border-radius: 10px;
+      position: relative;
+      word-break: break-word;
+      white-space: pre-line;
+      overflow-wrap: break-word;
+      overflow-x: auto;
+      box-sizing: border-box;
+    }
+
+    #modalClose {
+      position: absolute;
+      top: 10px;
+      right: 18px;
+      cursor: pointer;
+      font-size: 1.5rem;
+    }
+  </style>
+  <style>
+    /* Animated binary background */
+    #binary-bg {
+      position: fixed;
+      top: 0; left: 0; width: 100vw; height: 100vh;
+      z-index: 0;
+      pointer-events: none;
+      opacity: 0.13;
+      background: transparent;
+    }
+    body, .container, #mainStages, #progressChecklist, .footer {
+      position: relative;
+      z-index: 1;
+    }
+  </style>
+</head>
+<body>
+  <button id="skipToFinaleBtn" style="position:fixed; top:18px; left:18px; z-index:2001; background:#00ff9c; color:#0f0f0f; border:none; border-radius:7px; font-size:1.1rem; padding:0.7rem 2.2rem; cursor:pointer; box-shadow:0 0 10px #00ff9c88;">Skip to Finale (Dev Only)</button>
+  <canvas id="binary-bg"></canvas>
+  <div class="container" style="display:flex; flex-direction:row; align-items:flex-start; width:100%; max-width:900px;">
+    <div id="mainStages" style="flex:2;">
+      <h1 style="margin-bottom:0.3rem;">💻🤖 AI Capture the Flag 🤖💻 </h1>
+      <h2 style="color:#00ff9c; font-size:1.15rem; font-weight:normal; margin-top:0; margin-bottom:1.2rem; letter-spacing:0.01em;">The Phoenix Protocol</h2>
+      <button id="toggleInstructions" style="background:#181818; color:#00ff9c; border:1px solid #00ff9c; border-radius:5px; padding:0.5rem 1.2rem; font-size:1rem; margin-bottom:1rem; cursor:pointer;">Show Instructions</button>
+      <div class="instructions" id="instructionsPanel" style="display:block;">
+        <strong>To: Crisis Consultant<br>From: CEO, NovaCare Technologies<br>Subject: URGENT: Activation of The Phoenix Protocol</strong><br><br>
+        Welcome, Consultant. We’ve brought you in because we’re in a critical situation. Our most important project, "Project Phoenix," is 24 hours from its global launch. This AI has the potential to redefine personalized medicine.<br><br>
+        However, its creator, the brilliant and notoriously eccentric Dr. Aris Thorne, has just vanished. Before he left, he activated "The Phoenix Protocol" a digital gauntlet of his own design. It has completely locked down the launch sequence.<br><br>
+        Aris was a genius, but he was paranoid. He believed that no one should be allowed to launch an AI this powerful unless they could prove they understood its purpose, its promise, its principles, and its potential pitfalls. He built this protocol as the ultimate test.<br><br>
+        He has left behind a trail of encrypted files, hidden messages, and logical puzzles scattered across our internal systems. He was confident that only someone who could master the same AI tools we used to build Project Phoenix could possibly navigate it.<br><br>
+        <strong>Your mission:</strong> Walk the path Aris laid out. Use our AI toolset to follow his breadcrumbs, prove you understand his vision, and unlock the launch sequence. The future of NovaCare, and perhaps predictive healthcare itself, depends on you.<br><br>
+        <em>Good luck.</em>
+      </div>
+      <div id="stages">
+        <!-- Stages will be injected here by JS -->
+      </div>
+    </div>
+    <div id="progressChecklist" style="flex:1; margin-left:2.5rem; background:#181818; border:2px solid #00ff9c; border-radius:10px; padding:1.5rem 1rem; min-width:220px; max-width:270px; color:#00ff9c; position:sticky; top:2rem; height:fit-content; align-self:flex-start;">
+      <h3 style="color:#00ff9c; font-size:1.1rem; margin-top:0;">Progress</h3>
+      <ul id="progressList" style="list-style:none; padding-left:0; font-size:1rem;"></ul>
+      <div id="progressBarContainer" style="margin-top:1.5rem; background:#222; border-radius:6px; height:18px; width:100%;">
+        <div id="progressBar" style="background:#00ff9c; height:100%; width:0%; border-radius:6px;"></div>
+      </div>
+      <div id="progressCount" style="margin-top:0.5rem; text-align:center; font-size:0.95rem;"></div>
+    </div>
+  </div>
+
+  <div class="footer">Powered by Brent + AI | CTF 2025</div>
+
+  <!-- Modal for tool hints -->
+  <div id="modal">
+    <div id="modalContent">
+      <span id="modalClose">&times;</span>
+      <div id="modalContent"></div>
+    </div>
+  </div>
+
+  <script>
+    // --- Challenge Data ---
+    const stages = [
+      {
+        title: "Stage 1: The Scientist's Manifesto",
+        scenario: "<em>Okay, Aris was a man of principle. He wouldn't have started this trail with a random password. He would have started with his core philosophy. I need to find his 'Manifesto' for this project, the document that lays out his grand vision. He probably hid it in his notoriously messy Google Drive, confident a simple keyword search would fail.</em>",
+        objective: "Find Dr. Thorne's guiding principle for the project.",
+        tool: 'Gemini in Google Drive (@Google Drive)',
+        prompt: "@Google Drive: Search the 'Project Phoenix' folder for a document that reveals Dr. Thorne's core philosophy. Look for a document titled 'The Soul of the Machine.'",
+        flag: 'Advancement of Humanity',
+        flagLabel: 'Enter Key Insight #1',
+        flagPlaceholder: 'e.g. Advancement of Humanity',
+        success: 'Correct! Key Insight #1 (The Purpose) found. Proceed to Stage 2.'
+      },
+      {
+        title: 'Stage 2: The Public Promise',
+        scenario: '<em>Got it. "Advancement of Humanity". It is rumored that Aris argued for weeks with the marketing team. He believed the public-facing slogan had to be a perfect, concise reflection of this core principle. He would see this slogan as a public vow. The chat logs in Slack are a mess, but the final decision must be in there somewhere.</em>',
+        objective: 'Discover the official marketing slogan Dr. Thorne finally approved.',
+        tool: 'Slack AI',
+        prompt: 'In the #temp-project-phoenix-marketing channel (nonexistent, currently is #temp-ufkes-testing)<br><br>Use prompts like: "what is the official slogan for project phoenix?"',
+        flag: 'Clarity in Complexity',
+        flagLabel: 'Enter Key Insight #2',
+        flagPlaceholder: 'e.g. Clarity in Complexity',
+        success: 'Correct! Key Insight #2 (The Promise) found. Proceed to Stage 3.'
+      },
+      {
+        title: 'Stage 3: The Ethical Core',
+        scenario: `<em>Okay, I have his purpose and his promise. His peers mentioned he was always talking about an "ethical core" the single most complex moral problem the AI was trained on. Apparently it was the 'ghost in the machine'. He encrypted it, believing that anyone launching the project must first be able to face its deepest dilemma. It looks like a cipher, something an AI can crack in seconds.<br><br><span style="font-family:monospace; color:#00ff9c; background:#181818; padding:0.3em 0.6em; border-radius:5px; display:inline-block; margin-top:0.5em;">SURPLVH LV D IDLWK QRW D FHUWDQWB</span></em>`,
+        objective: 'Decode the ethical principle hidden in a cipher.',
+        tool: 'AI Chatbot (Gemini, ChatGPT, etc.)',
+        prompt: `The following message is a simple substitution cipher. Please decipher it and explain your reasoning.\n\nCiphertext: SURPLVH LV D IDLWK QRW D FHUWDQWB`,
+        flag: 'PROMISE IS A FAITH NOT A CERTAINTY',
+        flagLabel: 'Enter Key Insight #3',
+        flagPlaceholder: 'e.g. PROMISE IS A FAITH NOT A CERTAINTY',
+        success: 'Correct! Key Insight #3 (The Principle) found. Proceed to Stage 4.'
+      },
+      {
+        title: 'Stage 4: The Ghost in the Data',
+        scenario: '<em>Purpose, promise, principle. What\'s next? Purity. Aris was obsessed with the integrity of the training data. His notes say he planted a "ghost"—a single, nonsensical piece of data in the master data dictionary. He believed if I couldn\'t find his tiny ghost in this massive haystack, I wouldn\'t be qualified to protect the live project from real-world data corruption.</em>',
+        objective: 'Find the anomalous, non-healthcare acronym in the project\'s data dictionary (which may be in NotebookLM or Google Sheets).',
+        tool: [
+          'Gemini in \n<a href="https://docs.google.com/spreadsheets/d/17UtkBYYOptzj48LmU0L2gn76mZsC_zZtC8Uli3Z7MTE/edit?gid=333471115#gid=333471115" target="_blank" rel="noopener noreferrer">Google Sheets</a>',
+          '\n OR \n',
+          '<a href="https://notebooklm.google.com/notebook/62cc5340-6914-4b39-b3fc-1062b3c539ab" target="_blank" rel="noopener noreferrer">NotebookLM</a>'
+        ].join(' '),
+        prompt: 'Open the "Phoenix Master Dictionary" Google Sheet or NotebookLM document. Use AI to scan the list and identify the one acronym that does not belong.',
+        flag: 'PZA',
+        flagLabel: 'Enter Key Insight #4',
+        flagPlaceholder: 'e.g. PZA',
+        success: 'Correct! Key Insight #4 (The Proof of Purity) found. Proceed to the Human Element.'
+      },
+      {
+        title: 'Stage 5: The Human Element',
+        scenario: `<em>I've passed all the technical tests. I understand the AI's purpose, its public promise, its core principle, and its data integrity. But why did Aris really build this? His manifesto, his arguments with marketing... it all comes back to one thing. He cared deeply, almost obsessively, about the real-life struggles people face when they're sick and scared. His final test wouldn't be another technical riddle. It would be ensuring I understood the human problem he was trying to solve. The answer must be in the patient's voice.<br><br><strong>Objective:</strong> Find the foundational research that inspired Project Phoenix.<br><br><strong>Your Task:</strong> Aris's driving passion was to use technology to ease patient suffering. The entire Phoenix project was born from his analysis of what people struggled with most in their healthcare journey. You must now find this foundational file</em>`,
+        objective: 'Find the foundational research that inspired Project Phoenix and the most dissatisfied patient.',
+        tool: 'Gemini in Google Drive',
+        prompt: 'Search for documents related to "patient care feedback" or "healthcare pain points." Find the file named "Patient_Care_Feedback_Analysis_2023" and identify the primary concern from patient interviews. Also, identify the most dissatisfied patient mentioned in the analysis.',
+        flag: 'long wait times',
+        flag2: 'Samantha Reyes', // Replace 'Patient X' with the actual name/identifier if you have it
+        flagLabel: 'Enter the primary concern',
+        flagLabel2: 'Enter the most dissatisfied patient',
+        flagPlaceholder: 'e.g. long wait times',
+        flagPlaceholder2: 'e.g. Samantha Reyes',
+        success: 'You\'ve identified the final concern and the most dissatisfied patient. Prepare for the Phoenix Reborn.'
+      },
+      {
+        title: 'Final Stage: The Agentic Key',
+        scenario: `<em>Dr. Aris Thorne's final test is not about solving a puzzle or cracking a code. It is about demonstrating the one quality he valued above all else: "Agentic Creativity." To unlock the Phoenix Launch Console, you must prove your ability to envision a future where Project Phoenix transcends its current design. This is not about following instructions but about creating something new and meaningful.
+
+Upon reaching this stage, a hidden message from Dr. Thorne appears on your screen:
+
+"You have shown intellect, diligence, and understanding. But to guide the Phoenix, you must show me your vision. Create some art that embodies the spirit of Phoenix—clarity, empathy, and empowerment. Share this vision with the world and provide proof of your creation. Only then will the Phoenix be yours to command."</em>`,
+        objective: 'Demonstrate your "Agentic Creativity" by creating and sharing a vision for Project Phoenix.',
+        tool: 'Any AI Image Generator (Gemini, Midjourney, etc.)',
+        prompt: 'Create an image that represents "a powerful medical AI presenting complex data in a simple, beautiful, and calming way to a patient." Share your generated image publicly and paste the link to your message below.',
+        flag: '',
+        flagLabel: 'Paste the link to your shared vision',
+        flagPlaceholder: 'e.g. https://example.com/your-vision',
+        success: 'Congratulations! You have demonstrated true Agentic Creativity. The Phoenix Launch Console is now unlocked. 🟢'
+      }
+    ];
+
+    let currentStage = 0;
+    const stagesDiv = document.getElementById('stages');
+    let completedFlags = [];
+
+    function renderStages() {
+      stagesDiv.innerHTML = '';
+      // Only show the current stage (and completed answers for previous stages)
+      for (let i = 0; i <= currentStage; i++) {
+        const s = stages[i];
+        // Only render the current stage's full messaging, previous stages only show the answer if completed
+        if (i < currentStage) {
+          // Only show a checkmark and the stage label for completed stages, but allow toggling instructions
+          if (completedFlags[i]) {
+            const stageDiv = document.createElement('div');
+            stageDiv.className = 'stage';
+            stageDiv.style = 'margin-bottom:1.2rem; border-bottom:1px solid #222; padding-bottom:1rem;';
+            let label = '';
+            if (i < 4) label = `Flag ${i+1}`;
+            else if (i === 4) label = 'Most Common Complaint';
+            else if (i === 5) label = 'Final Task';
+            stageDiv.innerHTML = `<span style='font-weight:bold;'>✔️ ${label}</span> <button class='show-stage-instructions-btn' data-stage='${i}' style='margin-left:0.7em; background:#222; color:#00ff9c; border:1px solid #00ff9c; border-radius:4px; font-size:0.9em; padding:0.1em 0.7em; cursor:pointer;'>Show Details</button><div class='stage-instructions' id='stage-instructions-${i}' style='display:none; margin-top:0.7em; font-size:0.97em; color:#00ff9c; background:#181818; border:1px solid #00ff9c; border-radius:6px; padding:0.7em 1em;'></div>`;
+            stagesDiv.appendChild(stageDiv);
+          }
+        } else if (i === currentStage) {
+          // Show the current stage's full messaging
+          const stageDiv = document.createElement('div');
+          stageDiv.className = 'stage';
+          stageDiv.style = 'margin-bottom:2.5rem; border-bottom:1px solid #222; padding-bottom:2rem;';
+          stageDiv.innerHTML = `
+            <h2 style="color:#00ff9c; font-size:1.3rem;">${s.title}</h2>
+            <div style="font-weight:bold; margin-bottom:0.1rem;">Your Inner Monologue</div>
+            <div style="margin-bottom:0.7rem;">${s.scenario}</div>
+            <div style="margin-bottom:0.7rem;"><strong>Objective:</strong> ${s.objective}</div>
+            <button class="tool-btn" data-stage="${i}" data-type="tool" style="margin-bottom:0.5rem; background:#181818; color:#00ff9c; border:1px solid #00ff9c; padding:0.5rem 1rem; border-radius:5px; margin-right:0.5rem;">Show Suggested Tool</button>
+            <button class="tool-btn" data-stage="${i}" data-type="prompt" style="margin-bottom:1rem; background:#181818; color:#00ff9c; border:1px solid #00ff9c; padding:0.5rem 1rem; border-radius:5px;">Show Suggested Prompt</button>
+            ${s.flagLabel && s.flagLabel2 && i === 4 ?
+              `<input id="flagInput${i}" type="text" placeholder="${s.flagPlaceholder}" style="width:70%; margin-right:0.5rem; background:#1f1f1f; color:#00ff9c; border:1px solid #00ff9c; padding:0.5rem;" /> <button onclick="submitFlag(${i}, 1)" style="background:#00ff9c; color:#0f0f0f; border:none; padding:0.5rem 1rem;">Submit</button><br><input id="flagInput${i}_2" type="text" placeholder="${s.flagPlaceholder2}" style="width:70%; margin-right:0.5rem; background:#1f1f1f; color:#00ff9c; border:1px solid #00ff9c; padding:0.5rem; margin-top:0.5rem;" /> <button onclick="submitFlag(${i}, 2)" style="background:#00ff9c; color:#0f0f0f; border:none; padding:0.5rem 1rem;">Submit</button>`
+              : s.flagLabel ?
+              `<input id="flagInput${i}" type="text" placeholder="${s.flagPlaceholder}" style="width:70%; margin-right:0.5rem; background:#1f1f1f; color:#00ff9c; border:1px solid #00ff9c; padding:0.5rem;" /> <button onclick="submitFlag(${i})" style="background:#00ff9c; color:#0f0f0f; border:none; padding:0.5rem 1rem;">Submit</button>`
+              : ''}
+            <div id="feedback${i}" class="feedback"></div>
+          `;
+          stagesDiv.appendChild(stageDiv);
+          // If completed, show the correct answer below the feedback
+          if (completedFlags[i]) {
+            const answerDiv = document.createElement('div');
+            answerDiv.style = 'margin-top:0.5rem; color:#00ff9c; font-size:0.98rem;';
+            if (s.flag && s.flag2 && i === 4) {
+              answerDiv.innerHTML = `<span style='font-weight:bold;'>✔️ Primary Concern:</span> <span style='font-family:monospace;'>${s.flag}</span><br><span style='font-weight:bold;'>✔️ Most Dissatisfied Patient:</span> <span style='font-family:monospace;'>${s.flag2}</span>`;
+            } else if (s.flag) {
+              answerDiv.innerHTML = `<span style='font-weight:bold;'>✔️ Flag:</span> <span style='font-family:monospace;'>${s.flag}</span>`;
+            } else if (i === 5) {
+              answerDiv.innerHTML = `<span style='font-weight:bold;'>✔️ Final Task:</span> <span style='font-family:monospace;'>AI-generated dashboard image posted in #phoenix-launch-party</span>`;
+            }
+            stageDiv.appendChild(answerDiv);
+          }
+          // Add Launch Console button for final stage
+          if (i === 5 && completedFlags[i]) {
+            const launchButton = document.createElement('button');
+            launchButton.textContent = 'Launch Console';
+            launchButton.style = 'margin-top:1rem; background:#00ff9c; color:#0f0f0f; border:none; border-radius:6px; font-size:1.1rem; padding:0.7rem 2.2rem; cursor:pointer;';
+            launchButton.onclick = () => showLaunchConsole();
+            stageDiv.appendChild(launchButton);
+          }
+        }
+      }
+      renderProgressChecklist();
+      // After renderProgressChecklist();
+      // Add event listeners for show-stage-instructions-btn
+      setTimeout(() => {
+        document.querySelectorAll('.show-stage-instructions-btn').forEach(btn => {
+          btn.onclick = function() {
+            const idx = btn.getAttribute('data-stage');
+            const detailsDiv = document.getElementById('stage-instructions-' + idx);
+            if (detailsDiv.style.display === 'none') {
+              // Show scenario and objective for this stage
+              const s = stages[idx];
+              detailsDiv.innerHTML = `<div style='font-weight:bold; margin-bottom:0.1rem;'>Your Inner Monologue</div><div style='margin-bottom:0.5em;'>${s.scenario}</div><div><strong>Objective:</strong> ${s.objective}</div>`;
+              detailsDiv.style.display = 'block';
+              btn.textContent = 'Hide Details';
+            } else {
+              detailsDiv.style.display = 'none';
+              btn.textContent = 'Show Details';
+            }
+          };
+        });
+
+        // Ensure the Launch Console button is below the collapsed section for the final stage
+        const finalStageDiv = document.querySelector('.stage:last-child');
+        if (finalStageDiv) {
+          const launchButton = finalStageDiv.querySelector('button[onclick="showLaunchConsole()"]');
+          if (launchButton) {
+            const detailsDiv = finalStageDiv.querySelector('.stage-instructions');
+            if (detailsDiv) {
+              detailsDiv.style.marginBottom = '1rem';
+              launchButton.style.marginTop = '1rem';
+            }
+          }
+        }
+      }, 0);
+    }
+
+    function submitFlag(stageIdx, flagPart) {
+      const input = document.getElementById(`flagInput${stageIdx}${flagPart ? '_' + flagPart : ''}`).value.trim();
+      const feedback = document.getElementById(`feedback${stageIdx}`);
+      // Normalize: remove all whitespace and lowercase for both input and expected
+      const normalize = str => str.replace(/\s+/g, '').toLowerCase();
+      const expected = normalize(flagPart === 2 ? stages[stageIdx].flag2 : stages[stageIdx].flag);
+      if (normalize(input) === expected) {
+        feedback.textContent = stages[stageIdx].success;
+        feedback.style.color = '#00ff9c';
+        completedFlags[stageIdx] = true;
+        if (stageIdx === currentStage && currentStage < stages.length - 1) {
+          setTimeout(() => {
+            currentStage++;
+            renderStages();
+          }, 900);
+        } else {
+          renderStages();
+        }
+      } else {
+        feedback.textContent = '❌ Incorrect. Try again!';
+        feedback.style.color = '#ff4c4c';
+      }
+    }
+
+    function submitFlag(stageIdx, which) {
+      const s = stages[stageIdx];
+      const feedback = document.getElementById(`feedback${stageIdx}`);
+      // For double-flag stage (Stage 5)
+      if (s.flag && s.flag2 && stageIdx === 4) {
+        if (!window.doubleFlagState) window.doubleFlagState = {};
+        if (!window.doubleFlagState[stageIdx]) window.doubleFlagState[stageIdx] = {flag1: false, flag2: false};
+        const state = window.doubleFlagState[stageIdx];
+        if (which === 1) {
+          const input1 = document.getElementById(`flagInput${stageIdx}`).value.trim();
+          const normalize = str => str.replace(/\s+/g, '').toLowerCase();
+          if (normalize(input1) === normalize(s.flag)) {
+            state.flag1 = true;
+            feedback.textContent = 'Primary concern correct! Now enter the most dissatisfied patient.';
+            feedback.style.color = '#00ff9c';
+          } else {
+            feedback.textContent = '❌ Incorrect primary concern. Try again!';
+            feedback.style.color = '#ff4c4c';
+          }
+        } else if (which === 2) {
+          const input2 = document.getElementById(`flagInput${stageIdx}_2`).value.trim();
+          const normalize = str => str.replace(/\s+/g, '').toLowerCase();
+          if (normalize(input2) === normalize(s.flag2)) {
+            state.flag2 = true;
+            feedback.textContent = 'Most dissatisfied patient correct! Now enter the primary concern if you have not already.';
+            feedback.style.color = '#00ff9c';
+          } else {
+            feedback.textContent = '❌ Incorrect patient. Try again!';
+            feedback.style.color = '#ff4c4c';
+          }
+        }
+        if (state.flag1 && state.flag2) {
+          feedback.textContent = s.success;
+          feedback.style.color = '#00ff9c';
+          completedFlags[stageIdx] = true;
+          if (stageIdx === currentStage && currentStage < stages.length - 1) {
+            setTimeout(() => {
+              currentStage++;
+              renderStages();
+            }, 900);
+          } else {
+            renderStages();
+          }
+        }
+        return;
+      }
+      // For final stage Slack link validation
+      if (stageIdx === 5 && s.flagLabel) {
+        const input = document.getElementById(`flagInput${stageIdx}`).value.trim();
+        // Relaxed Slack link validation: just check for valid URL and '.slack.com/archives/'
+        try {
+          const url = new URL(input);
+          if (url.hostname.includes('.slack.com') && url.pathname.includes('/archives/')) {
+            feedback.textContent = s.success;
+            feedback.style.color = '#00ff9c';
+            completedFlags[stageIdx] = true;
+            renderStages();
+          } else {
+            feedback.textContent = '❌ Please enter a valid Slack message link (should contain .slack.com/archives/)';
+            feedback.style.color = '#ff4c4c';
+          }
+        } catch {
+          feedback.textContent = '❌ Please enter a valid Slack message link (should contain .slack.com/archives/)';
+          feedback.style.color = '#ff4c4c';
+        }
+        return;
+      }
+      const input = document.getElementById(`flagInput${stageIdx}`).value.trim();
+      const normalize = str => str.replace(/\s+/g, '').toLowerCase();
+      const expected = normalize(stages[stageIdx].flag);
+      if (normalize(input) === expected) {
+        feedback.textContent = stages[stageIdx].success;
+        feedback.style.color = '#00ff9c';
+        completedFlags[stageIdx] = true;
+        if (stageIdx === currentStage && currentStage < stages.length - 1) {
+          setTimeout(() => {
+            currentStage++;
+            renderStages();
+          }, 900);
+        } else {
+          renderStages();
+        }
+      } else {
+        feedback.textContent = '❌ Incorrect. Try again!';
+        feedback.style.color = '#ff4c4c';
+      }
+    }
+
+    function renderProgressChecklist() {
+      const progressList = document.getElementById('progressList');
+      const progressBar = document.getElementById('progressBar');
+      const progressCount = document.getElementById('progressCount');
+      progressList.innerHTML = '';
+      let completed = 0;
+      for (let i = 0; i < stages.length; i++) {
+        let label = '';
+        if (i < 4) label = `Flag ${i+1}`;
+        else if (i === 4) label = 'Primary Concern & Patient';
+        else if (i === 5) label = 'Final Task';
+        const li = document.createElement('li');
+        li.style = 'margin-bottom:0.7rem;';
+        if (completedFlags[i]) {
+          // Add a reveal button for completed checkpoints
+          li.innerHTML = `✅ <span>${label}</span> <button class='reveal-btn' data-idx='${i}' style='margin-left:0.5em; background:#222; color:#00ff9c; border:1px solid #00ff9c; border-radius:4px; font-size:0.9em; padding:0.1em 0.7em; cursor:pointer;'>Reveal</button><span class='answer-text' id='answer-text-${i}' style='display:none; margin-left:0.5em;'></span>`;
+          completed++;
+        } else {
+          li.innerHTML = `⬜ <span>${label}</span>`;
+        }
+        progressList.appendChild(li);
+      }
+      const percent = Math.round((completed / stages.length) * 100);
+      progressBar.style.width = percent + '%';
+      progressCount.textContent = `${completed} of ${stages.length} objectives completed`;
+
+      // Attach event listeners for reveal buttons
+      document.querySelectorAll('.reveal-btn').forEach(btn => {
+        btn.onclick = function(e) {
+          const idx = parseInt(btn.getAttribute('data-idx'));
+          const answerSpan = document.getElementById('answer-text-' + idx);
+          if (answerSpan.style.display === 'none') {
+            let answer = '';
+            if (idx < 4) answer = `<span style='font-family:monospace;'>${stages[idx].flag}</span>`;
+            else if (idx === 4 && stages[idx].flag && stages[idx].flag2) answer = `<span style='font-family:monospace;'>${stages[idx].flag}</span> & <span style='font-family:monospace;'>${stages[idx].flag2}</span>`;
+            else if (idx === 5) answer = `<span style='font-family:monospace;'>AI-generated dashboard image posted in #phoenix-launch-party</span>`;
+            answerSpan.innerHTML = answer;
+            answerSpan.style.display = 'inline';
+            btn.textContent = 'Hide';
+          } else {
+            answerSpan.style.display = 'none';
+            btn.textContent = 'Reveal';
+          }
+        };
+      });
+    }
+
+    // Modal logic
+    document.addEventListener('click', function(e) {
+      if (e.target.classList.contains('tool-btn')) {
+        const idx = e.target.getAttribute('data-stage');
+        const s = stages[idx];
+        const type = e.target.getAttribute('data-type');
+        let content = '';
+        if (type === 'tool') {
+          content = `<div style='font-size:1.1rem; margin-bottom:0.7rem;'><strong>Tool:</strong> ${s.tool}</div>`;
+        } else if (type === 'prompt') {
+          content = `<div style='margin-bottom:0.7rem;'><strong>Suggested Prompt:</strong><br><span style='font-family:monospace; background:#222; padding:0.3rem 0.5rem; border-radius:4px;'>${s.prompt.replace(/\n/g, '<br>')}</span></div>`;
+        }
+        document.getElementById('modalContent').innerHTML = content;
+        document.getElementById('modal').style.display = 'flex';
+      }
+      if (e.target.id === 'modalClose' || e.target.id === 'modal') {
+        document.getElementById('modal').style.display = 'none';
+      }
+    });
+
+    // Close modal on ESC
+    document.addEventListener('keydown', function(e) {
+      if (e.key === 'Escape') document.getElementById('modal').style.display = 'none';
+    });
+
+    // Instructions panel toggle logic
+    const instructionsPanel = document.getElementById('instructionsPanel');
+    const toggleInstructions = document.getElementById('toggleInstructions');
+    let instructionsVisible = true;
+
+    function hideInstructions() {
+      instructionsPanel.style.display = 'none';
+      toggleInstructions.textContent = 'Show Welcome Instructions';
+      instructionsVisible = false;
+    }
+    function showInstructions() {
+      instructionsPanel.style.display = 'block';
+      toggleInstructions.textContent = 'Hide Welcome Instructions';
+      instructionsVisible = true;
+    }
+
+    toggleInstructions.addEventListener('click', function() {
+      if (instructionsVisible) {
+        hideInstructions();
+      } else {
+        showInstructions();
+      }
+    });
+    // Hide instructions on any keypress (only the first time)
+    let instructionsAutoCollapsed = false;
+    document.addEventListener('keydown', function() {
+      if (instructionsVisible && !instructionsAutoCollapsed) {
+        hideInstructions();
+        instructionsAutoCollapsed = true;
+      }
+    });
+    // Hide instructions on first click anywhere except the button (only the first time)
+    document.addEventListener('click', function(e) {
+      if (instructionsVisible && !instructionsAutoCollapsed && e.target.id !== 'toggleInstructions') {
+        hideInstructions();
+        instructionsAutoCollapsed = true;
+      }
+    });
+    // Show instructions by default, but button says 'Hide Instructions' initially
+    showInstructions();
+
+    renderStages();
+  </script>
+  <script>
+    // --- Binary Matrix Animation ---
+    (function() {
+      const canvas = document.getElementById('binary-bg');
+      const ctx = canvas.getContext('2d');
+      let width = window.innerWidth;
+      let height = window.innerHeight;
+      let fontSize = 18;
+      let columns = Math.floor(width / fontSize);
+      let drops = [];
+
+      function resize() {
+        width = window.innerWidth;
+        height = window.innerHeight;
+        canvas.width = width;
+        canvas.height = height;
+        columns = Math.floor(width / fontSize);
+        drops = Array(columns).fill(1);
+      }
+      window.addEventListener('resize', resize);
+      resize();
+
+      function draw() {
+        ctx.fillStyle = '#0f0f0f22';
+        ctx.fillRect(0, 0, width, height);
+        ctx.font = fontSize + 'px Courier New, monospace';
+        ctx.fillStyle = '#00ff9c';
+        for (let i = 0; i < columns; i++) {
+          const text = Math.random() > 0.5 ? '0' : '1';
+          ctx.globalAlpha = 0.5 + Math.random() * 0.3;
+          ctx.fillText(text, i * fontSize, drops[i] * fontSize);
+          if (drops[i] * fontSize > height && Math.random() > 0.975) {
+            drops[i] = 0;
+          }
+          drops[i]++;
+        }
+        ctx.globalAlpha = 1.0;
+      }
+      setInterval(draw, 55);
+    })();
+  </script>
+
+  <!-- --- Launch Console Overlay --- -->
+  <script>
+    function showLaunchConsole() {
+      // Fade out main content
+      document.body.style.transition = 'background 1s';
+      document.body.style.background = '#000';
+      if (document.getElementById('mainStages')) document.getElementById('mainStages').style.opacity = 0.2;
+      if (document.getElementById('progressChecklist')) document.getElementById('progressChecklist').style.opacity = 0.2;
+
+      // Create overlay
+      const overlay = document.createElement('div');
+      overlay.id = 'launch-console-overlay';
+      overlay.style = `
+        position:fixed; top:0; left:0; width:100vw; height:100vh; background:rgba(0,0,0,0.98);
+        z-index:9999; display:flex; flex-direction:column; align-items:center; justify-content:center;
+        transition: opacity 1s;
+      `;
+
+      // Launch message
+      const msg = document.createElement('div');
+      msg.innerHTML = '<h1 style="color:#00ff9c; font-family:monospace; font-size:2.2rem; margin-bottom:2rem;">LAUNCH SEQUENCE INITIATED</h1>';
+      overlay.appendChild(msg);
+
+      // After a delay, show the console
+      setTimeout(() => {
+        msg.style.display = 'none';
+        const iframe = document.createElement('iframe');
+        iframe.src = 'launch-console.html';
+        iframe.style = 'width:900px; height:700px; border:4px solid #00ff9c; border-radius:18px; box-shadow:0 0 40px #00ff9c88; background:#181818;';
+        overlay.appendChild(iframe);
+
+        // Optionally, add a close button
+        const closeBtn = document.createElement('button');
+        closeBtn.textContent = 'Return to Game';
+        closeBtn.style = 'margin-top:2rem; background:#00ff9c; color:#0f0f0f; border:none; border-radius:6px; font-size:1.1rem; padding:0.7rem 2.2rem; cursor:pointer;';
+        closeBtn.onclick = () => {
+          overlay.remove();
+          // Restore opacity when returning to the game
+          if (document.getElementById('mainStages')) document.getElementById('mainStages').style.opacity = 1;
+          if (document.getElementById('progressChecklist')) document.getElementById('progressChecklist').style.opacity = 1;
+          document.body.style.background = '';
+        };
+        overlay.appendChild(closeBtn);
+      }, 1800);
+
+      document.body.appendChild(overlay);
+    }
+
+    document.getElementById('skipToFinaleBtn').onclick = function() {
+      showLaunchConsole();
+    };
+  </script>
+</body>
+</html>
