@@ -1,8 +1,9 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>AI Scavenger Hunt</title>
   <style>
     body {
@@ -117,46 +118,73 @@
     /* Animated binary background */
     #binary-bg {
       position: fixed;
-      top: 0; left: 0; width: 100vw; height: 100vh;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
       z-index: 0;
       pointer-events: none;
       opacity: 0.13;
       background: transparent;
     }
-    body, .container, #mainStages, #progressChecklist, .footer {
+
+    body,
+    .container,
+    #mainStages,
+    #progressChecklist,
+    .footer {
       position: relative;
       z-index: 1;
     }
   </style>
 </head>
+
 <body>
   <!-- <button id="skipToFinaleBtn" style="position:fixed; top:18px; left:18px; z-index:2001; background:#00ff9c; color:#0f0f0f; border:none; border-radius:7px; font-size:1.1rem; padding:0.7rem 2.2rem; cursor:pointer; box-shadow:0 0 10px #00ff9c88;">Skip to Finale (Dev Only)</button> -->
   <canvas id="binary-bg"></canvas>
   <div class="container" style="display:flex; flex-direction:row; align-items:flex-start; width:100%; max-width:900px;">
     <div id="mainStages" style="flex:2;">
       <h1 style="margin-bottom:0.3rem;">💻🤖 AI Capture the Flag 🤖💻 </h1>
-      <h2 style="color:#00ff9c; font-size:1.15rem; font-weight:normal; margin-top:0; margin-bottom:1.2rem; letter-spacing:0.01em;">The Phoenix Protocol</h2>
-      <button id="toggleInstructions" style="background:#181818; color:#00ff9c; border:1px solid #00ff9c; border-radius:5px; padding:0.5rem 1.2rem; font-size:1rem; margin-bottom:1rem; cursor:pointer;">Show Instructions</button>
+      <h2
+        style="color:#00ff9c; font-size:1.15rem; font-weight:normal; margin-top:0; margin-bottom:1.2rem; letter-spacing:0.01em;">
+        The Phoenix Protocol</h2>
+      <button id="toggleInstructions"
+        style="background:#181818; color:#00ff9c; border:1px solid #00ff9c; border-radius:5px; padding:0.5rem 1.2rem; font-size:1rem; margin-bottom:1rem; cursor:pointer;">Show
+        Instructions</button>
       <div class="instructions" id="instructionsPanel" style="display:block;">
-        <strong>To: Crisis Consultant<br>From: CEO, NovaCare Technologies<br>Subject: URGENT: Activation of The Phoenix Protocol</strong><br><br>
-        Welcome, Consultant. We’ve brought you in because we’re in a critical situation. Our most important project, "Project Phoenix," is 24 hours from its global launch. This AI has the potential to redefine personalized medicine.<br><br>
-        However, its creator, the brilliant and notoriously eccentric Dr. Aris Thorne, has just vanished. Before he left, he activated "The Phoenix Protocol" a digital gauntlet of his own design. It has completely locked down the launch sequence.<br><br>
-        Aris was a genius, but he was paranoid. He believed that no one should be allowed to launch an AI this powerful unless they could prove they understood its purpose, its promise, its principles, and its potential pitfalls. He built this protocol as the ultimate test.<br><br>
-        He has left behind a trail of encrypted files, hidden messages, and logical puzzles scattered across our internal systems. He was confident that only someone who could master the same AI tools we used to build Project Phoenix could possibly navigate it.<br><br>
-        <strong>Your mission:</strong> Walk the path Aris laid out. Use our AI toolset to follow his breadcrumbs, prove you understand his vision, and unlock the launch sequence. The future of NovaCare, and perhaps predictive healthcare itself, depends on you.<br><br>
+        <strong>To: Crisis Consultant<br>From: CEO, NovaCare Technologies<br>Subject: URGENT: Activation of The Phoenix
+          Protocol</strong><br><br>
+        Welcome, Consultant. We’ve brought you in because we’re in a critical situation. Our most important project,
+        "Project Phoenix," is 24 hours from its global launch. This AI has the potential to redefine personalized
+        medicine.<br><br>
+        However, its creator, the brilliant and notoriously eccentric Dr. Aris Thorne, has just vanished. Before he
+        left, he activated "The Phoenix Protocol" a digital gauntlet of his own design. It has completely locked down
+        the launch sequence.<br><br>
+        Aris was a genius, but he was paranoid. He believed that no one should be allowed to launch an AI this powerful
+        unless they could prove they understood its purpose, its promise, its principles, and its potential pitfalls. He
+        built this protocol as the ultimate test.<br><br>
+        He has left behind a trail of encrypted files, hidden messages, and logical puzzles scattered across our
+        internal systems. He was confident that only someone who could master the same AI tools we used to build Project
+        Phoenix could possibly navigate it.<br><br>
+        <strong>Your mission:</strong> Walk the path Aris laid out. Use our AI toolset to follow his breadcrumbs, prove
+        you understand his vision, and unlock the launch sequence. The future of NovaCare, and perhaps predictive
+        healthcare itself, depends on you.<br><br>
         <em>Good luck.</em>
       </div>
       <div id="stages">
         <!-- Stages will be injected here by JS -->
       </div>
     </div>
-    <div id="progressChecklist" style="flex:1; margin-left:2.5rem; background:#181818; border:2px solid #00ff9c; border-radius:10px; padding:1.5rem 1rem; min-width:220px; max-width:270px; color:#00ff9c; position:sticky; top:2rem; height:fit-content; align-self:flex-start;">
+    <div id="progressChecklist"
+      style="flex:1; margin-left:2.5rem; background:#181818; border:2px solid #00ff9c; border-radius:10px; padding:1.5rem 1rem; min-width:220px; max-width:270px; color:#00ff9c; position:sticky; top:2rem; height:fit-content; align-self:flex-start;">
       <h3 style="color:#00ff9c; font-size:1.1rem; margin-top:0;">Progress</h3>
       <ul id="progressList" style="list-style:none; padding-left:0; font-size:1rem;"></ul>
-      <div id="progressBarContainer" style="margin-top:1.5rem; background:#222; border-radius:6px; height:18px; width:100%;">
+      <div id="progressBarContainer"
+        style="margin-top:1.5rem; background:#222; border-radius:6px; height:18px; width:100%;">
         <div id="progressBar" style="background:#00ff9c; height:100%; width:0%; border-radius:6px;"></div>
       </div>
       <div id="progressCount" style="margin-top:0.5rem; text-align:center; font-size:0.95rem;"></div>
+      <div id="launchButtonContainer" style="text-align:center; margin-top:1.5rem; display:none;"></div>
     </div>
   </div>
 
@@ -201,7 +229,7 @@
       },
       {
         title: 'Stage 3: The Ethical Core',
-        scenario: `<em>Okay, I have his purpose and his promise. His peers mentioned he was always talking about an "ethical core" the single most complex moral problem the AI was trained on. Apparently it was the 'ghost in the machine'. He encrypted it, believing that anyone launching the project must first be able to face its deepest dilemma. It looks like a cipher, something an AI can crack in seconds.<br><br><span style="font-family:monospace; color:#00ff9c; background:#181818; padding:0.3em 0.6em; border-radius:5px; display:inline-block; margin-top:0.5em;">SURPLVH LV D IDLWK QRW D FHUWDQWB</span></em>`,
+        scenario: `<em>Okay, I have his purpose and his promise. His peers mentioned he was always talking about an "ethical core" the single most complex moral problem the AI was trained on. Apparently it was the 'ghost in the machine'. He encrypted it, believing that anyone launching the project must first be able to face its deepest dilemma. It looks like a cipher, something an LLM can crack in seconds.<br><br><span style="font-family:monospace; color:#00ff9c; background:#181818; padding:0.3em 0.6em; border-radius:5px; display:inline-block; margin-top:0.5em;">SURPLVH LV D IDLWK QRW D FHUWDQWB</span></em>`,
         objective: 'Decode the ethical principle hidden in a cipher.',
         tool: 'AI Chatbot (Gemini, ChatGPT, etc.)',
         prompt: `Decipher the following message - Cipher Text: SURPLVH LV D IDLWK QRW D FHUWDQWB`,
@@ -231,7 +259,7 @@
       },
       {
         title: 'Stage 5: The Human Element',
-        scenario: `<em>I've passed all the technical tests. I understand the AI's purpose, its public promise, its core principle, and its data integrity. But why did Aris really build this? His manifesto, his arguments with marketing... it all comes back to one thing. He cared deeply, almost obsessively, about the real-life struggles people face when they're sick and scared. His final test wouldn't be another technical riddle. It would be ensuring I understood the human problem he was trying to solve. The answer must be in the patient's voice.<br><br><strong>Objective:</strong> Find the foundational research that inspired Project Phoenix.<br><br><strong>Your Task:</strong> Aris's driving passion was to use technology to ease patient suffering. The entire Phoenix project was born from his analysis of what people struggled with most in their healthcare journey. I have to find the most common negative feedback, and whomever was the most dissatisfied.</em>`,
+        scenario: `<em>I've passed all the technical tests. I understand the AI's purpose, its public promise, its core principle, and its data integrity. But why did Aris really build this? His manifesto, his arguments with marketing... it all comes back to one thing. He cared deeply, almost obsessively, about the real-life struggles people face when they're sick and scared. His test wouldn't be another technical riddle. It would be ensuring I understood the human problem he was trying to solve. The answer must be in the patient's voice.<br><br><strong>Objective:</strong> Find the foundational research that inspired Project Phoenix.<br><br><strong>Your Task:</strong> Aris's driving passion was to use technology to ease patient suffering. The entire Phoenix project was born from his analysis of what people struggled with most in their healthcare journey. I have to find the most common negative feedback, and whomever was the most dissatisfied.</em>`,
         objective: 'Find one of the fundamental problems with healthcare that inspired Project Phoenix and the most dissatisfied patient in the survey results.',
         tool: 'Search Drive for the most recent survey, and then use Gemini in the Sheets document to analyze the results.',
         prompt: 'What was the most common reason for patient dissatisfaction in their feedback?',
@@ -267,26 +295,31 @@
         flagLabel2: 'Enter the most dissatisfied patient',
         flagPlaceholder: 'e.g. ____ _____',
         flagPlaceholder2: 'e.g. _________ _____',
-        success: 'You\'ve identified the final concern and the most dissatisfied patient. Prepare for the Phoenix Reborn.',
+        success: 'You\'ve identified the most common concern and the most dissatisfied patient. Prepare for the Phoenix Reborn.',
         toolScreenshot: '',
         promptScreenshot: ['static/stage5-1-prompt.png', 'static/stage5-2-prompt.png'] // Allow two images for prompt screenshot
       },
       {
-        title: 'Final Stage: The Agentic Key',
-        scenario: `<em>Dr. Aris Thorne's final test is not about solving a puzzle or cracking a code. It is about demonstrating the one quality he valued above all else: "Agentic Creativity." To unlock the Phoenix Launch Console, you must prove your ability to envision a future where Project Phoenix transcends its current design. This is not about following instructions but about creating something new and meaningful.
-
-Upon reaching this stage, a hidden message from Dr. Thorne appears on your screen:
-
-"You have shown intellect, diligence, and understanding. But to guide the Phoenix, you must show me your vision. <strong>Create some art that embodies the spirit of Phoenix—clarity, empathy, and empowerment. <u>Upload your creation to the Slack channel <span style='color:#00ff9c;'>#phoenix-launch-party</span>.</u> Share this vision with the world and provide proof of your creation. Only then will the Phoenix be yours to command.</strong>"</em>`,
-        objective: 'Demonstrate your "Agentic Creativity" by creating and sharing a vision for Project Phoenix. <br><br><strong>Important:</strong> You must upload your generated image to the Slack channel <span style="color:#00ff9c;">#phoenix-launch-party</span> and provide the link below.',
-        tool: 'Any AI Image Generator (Gemini, Midjourney, etc.)',
-        prompt: 'Create an image that represents "a powerful medical AI presenting complex data in a simple, beautiful, and calming way to a patient." <strong>Upload your image to the Slack channel <span style="color:#00ff9c;">#phoenix-launch-party</span></strong> and paste the link to your message below.',
-        flag: '',
-        flagLabel: 'Paste the link to your shared vision',
-        flagPlaceholder: 'e.g. https://example.com/your-vision',
-        success: 'Congratulations! You have demonstrated true Agentic Creativity. The Phoenix Launch Console is now unlocked. 🟢',
-        toolScreenshot: '',
-        promptScreenshot: ''
+        "title": "Final Stage: The Heart of the Phoenix",
+        "scenario": "Upon opening the \"Our DNA\" document, a final, automated message from Dr. Aris Thorne triggers on your screen:<br><br><div style='background:#181818; border:1px solid #00ff9c; border-left-width: 4px; padding: 1rem; margin: 1rem 0; border-radius: 5px;'><blockquote style='margin:0; padding:0; border:0; font-style:italic; color:#aaffd0;'>\"If you are reading this, you have passed the technical trials. But Phoenix was never just about code. It was about creating a better future for healthcare, and technology is useless without the right people guiding it.<br><br>You now hold my personal code, the values I built this company on. The launch console can only be opened with a choice... a public declaration of the principle you will use to guide the Phoenix.<br><br>The AI is listening. Show it your heart.\"</blockquote></div><p><strong>Review the five core values you just discovered:</strong></p><ul><li>We are customer-obsessed.</li><li>We embody the power of “we.”</li><li>We take ownership.</li><li>We do what we say we’ll do.</li><li>We act.</li></ul>",
+        "objective": "Embody a core company value and signal the launch of Project Phoenix.  Generate an image that visually represents ONE of these values and post it to the Slack channel <span style=\"color:#00ff9c;\">#phoenix-launch-party<\/span> then post the link to the slack message here.",
+        "tool": "Any AI Image Generator (Gemini, Midjourney, etc.)",
+        "prompt": "Choose one of the five core values that you believe is most critical for the future of healthcare technology. Generate an AI image that powerfully represents your chosen value in action. \n\nFor example:\n* **For 'Customer-Obsessed':** \"A developer and a doctor collaboratively designing a solution for a smiling patient on a futuristic tablet.\"\n* **For 'The Power of We':** \"A diverse team of healthcare workers, engineers, and patients putting their hands together over a glowing, interconnected network.\"\n\nAfter generating, post your image to the Slack channel <span style=\"color:#00ff9c;\">#phoenix-launch-party<\/span>",
+        "flag": "",
+        "flagLabel": "Which company value did your image represent?",
+        "flagPlaceholder": "e.g., https://slack.com/archives/...",
+        "success": "Congratulations! You have demonstrated true insight into the values of NovaCare Technologies. The Phoenix Launch Console is now unlocked. Click \"Open Dr. Thorne's Launch Console\" to proceed.",
+        "toolScreenshot": "",
+        "promptScreenshot": ""
+      },
+      {
+        title: "Bonus Stage: Share the Knowledge",
+        isOptionalTask: true,
+        scenario: "You've proven you have the technical skills and the right values to guide Project Phoenix. As a final, optional step, share your wisdom.",
+        objective: "Think of a useful AI workflow you've discovered (during this game or in your work). Post a brief description of it in the <strong>#ai-at-redox</strong> Slack channel to help your colleagues level up their AI game.",
+        tool: "Slack",
+        prompt: "Example Post:<br><br><strong>My AI Workflow Tip:</strong> I use Gemini to summarize long email threads. I just use the @Gmail extension and ask it to 'summarize the key decisions and action items from this thread'. Saves me a ton of time!",
+        success: "Thank you for sharing your knowledge and helping build a smarter team!"
       }
     ];
 
@@ -307,9 +340,10 @@ Upon reaching this stage, a hidden message from Dr. Thorne appears on your scree
             stageDiv.className = 'stage';
             stageDiv.style = 'margin-bottom:1.2rem; border-bottom:1px solid #222; padding-bottom:1rem;';
             let label = '';
-            if (i < 4) label = `Flag ${i+1}`;
+            if (i < 4) label = `Flag ${i + 1}`;
             else if (i === 4) label = 'Most Common Complaint';
-            else if (i === 5) label = 'Final Task';
+            else if (i === 5) label = 'Final Task - Unlock the Launch Console';
+            else if (i === 6) label = 'Bonus Task';
             stageDiv.innerHTML = `<span style='font-weight:bold;'>✔️ ${label}</span> <button class='show-stage-instructions-btn' data-stage='${i}' style='margin-left:0.7em; background:#222; color:#00ff9c; border:1px solid #00ff9c; border-radius:4px; font-size:0.9em; padding:0.1em 0.7em; cursor:pointer;'>Show Details</button><div class='stage-instructions' id='stage-instructions-${i}' style='display:none; margin-top:0.7em; font-size:0.97em; color:#00ff9c; background:#181818; border:1px solid #00ff9c; border-radius:6px; padding:0.7em 1em;'></div>`;
             stagesDiv.appendChild(stageDiv);
           }
@@ -327,9 +361,11 @@ Upon reaching this stage, a hidden message from Dr. Thorne appears on your scree
             <button class="tool-btn" data-stage="${i}" data-type="prompt" style="margin-bottom:1rem; background:#181818; color:#00ff9c; border:1px solid #00ff9c; padding:0.5rem 1rem; border-radius:5px;">Show Suggested Prompt</button>
             ${s.flagLabel && s.flagLabel2 && i === 4 ?
               `<input id="flagInput${i}" type="text" placeholder="${s.flagPlaceholder}" style="width:70%; margin-right:0.5rem; background:#1f1f1f; color:#00ff9c; border:1px solid #00ff9c; padding:0.5rem;" /> <button onclick="submitFlag(${i}, 1)" style="background:#00ff9c; color:#0f0f0f; border:none; padding:0.5rem 1rem;">Submit</button><br><input id="flagInput${i}_2" type="text" placeholder="${s.flagPlaceholder2}" style="width:70%; margin-right:0.5rem; background:#1f1f1f; color:#00ff9c; border:1px solid #00ff9c; padding:0.5rem; margin-top:0.5rem;" /> <button onclick="submitFlag(${i}, 2)" style="background:#00ff9c; color:#0f0f0f; border:none; padding:0.5rem 1rem;">Submit</button>`
+              : s.isOptionalTask ?
+                `<button onclick="submitFlag(${i})" style="background:#00ff9c; color:#0f0f0f; border:none; padding:0.5rem 1rem; margin-top:0.5rem;">I've Shared My Workflow</button>`
               : s.flagLabel ?
-              `<input id="flagInput${i}" type="text" placeholder="${s.flagPlaceholder}" style="width:70%; margin-right:0.5rem; background:#1f1f1f; color:#00ff9c; border:1px solid #00ff9c; padding:0.5rem;" /> <button onclick="submitFlag(${i})" style="background:#00ff9c; color:#0f0f0f; border:none; padding:0.5rem 1rem;">Submit</button>`
-              : ''}
+                `<input id="flagInput${i}" type="text" placeholder="${s.flagPlaceholder}" style="width:70%; margin-right:0.5rem; background:#1f1f1f; color:#00ff9c; border:1px solid #00ff9c; padding:0.5rem;" /> <button onclick="submitFlag(${i})" style="background:#00ff9c; color:#0f0f0f; border:none; padding:0.5rem 1rem;">Submit</button>`
+                : ''}
             <div id="feedback${i}" class="feedback"></div>
           `;
           stagesDiv.appendChild(stageDiv);
@@ -342,17 +378,11 @@ Upon reaching this stage, a hidden message from Dr. Thorne appears on your scree
             } else if (s.flag) {
               answerDiv.innerHTML = `<span style='font-weight:bold;'>✔️ Flag:</span> <span style='font-family:monospace;'>${s.flag}</span>`;
             } else if (i === 5) {
-              answerDiv.innerHTML = `<span style='font-weight:bold;'>✔️ Final Task:</span> <span style='font-family:monospace;'>AI-generated dashboard image posted in #phoenix-launch-party</span>`;
+              answerDiv.innerHTML = `<span style='font-weight:bold;'>✔️ Final Task - Unlock the Launch Console:</span> <span style='font-family:monospace;'>AI-generated dashboard image posted in #phoenix-launch-party</span>`;
+            } else if (i === 6) {
+              answerDiv.innerHTML = `<span style='font-weight:bold;'>✔️ Workflow Shared:</span> <span style='font-family:monospace;'>Posted in #ai-at-redox</span>`;
             }
             stageDiv.appendChild(answerDiv);
-          }
-          // Add Launch Console button for final stage
-          if (i === 5 && completedFlags[i]) {
-            const launchButton = document.createElement('button');
-            launchButton.textContent = 'Launch Console';
-            launchButton.style = 'margin-top:1rem; background:#00ff9c; color:#0f0f0f; border:none; border-radius:6px; font-size:1.1rem; padding:0.7rem 2.2rem; cursor:pointer;';
-            launchButton.onclick = () => showLaunchConsole();
-            stageDiv.appendChild(launchButton);
           }
         }
       }
@@ -361,7 +391,7 @@ Upon reaching this stage, a hidden message from Dr. Thorne appears on your scree
       // Add event listeners for show-stage-instructions-btn
       setTimeout(() => {
         document.querySelectorAll('.show-stage-instructions-btn').forEach(btn => {
-          btn.onclick = function() {
+          btn.onclick = function () {
             const idx = btn.getAttribute('data-stage');
             const detailsDiv = document.getElementById('stage-instructions-' + idx);
             if (detailsDiv.style.display === 'none') {
@@ -404,36 +434,23 @@ Upon reaching this stage, a hidden message from Dr. Thorne appears on your scree
       }
     }
 
-    function submitFlag(stageIdx, flagPart) {
-      const input = document.getElementById(`flagInput${stageIdx}${flagPart ? '_' + flagPart : ''}`).value.trim();
-      const feedback = document.getElementById(`feedback${stageIdx}`);
-      const s = stages[stageIdx];
-      let expected = flagPart === 2 ? s.flag2 : s.flag;
-      if (isFlagCorrect(input, expected)) {
-        feedback.textContent = s.success;
-        feedback.style.color = '#00ff9c';
-        completedFlags[stageIdx] = true;
-        if (stageIdx === currentStage && currentStage < stages.length - 1) {
-          setTimeout(() => {
-            currentStage++;
-            renderStages();
-          }, 900);
-        } else {
-          renderStages();
-        }
-      } else {
-        feedback.textContent = '❌ Incorrect. Try again!';
-        feedback.style.color = '#ff4c4c';
-      }
-    }
-
     function submitFlag(stageIdx, which) {
       const s = stages[stageIdx];
       const feedback = document.getElementById(`feedback${stageIdx}`);
-      // For double-flag stage (Stage 5)
+
+      // For optional, non-flag tasks
+      if (s.isOptionalTask) {
+        feedback.textContent = s.success;
+        feedback.style.color = '#00ff9c';
+        completedFlags[stageIdx] = true;
+        renderStages();
+        return;
+      }
+
+      // For double-flag stage (Stage 4)
       if (s.flag && s.flag2 && stageIdx === 4) {
         if (!window.doubleFlagState) window.doubleFlagState = {};
-        if (!window.doubleFlagState[stageIdx]) window.doubleFlagState[stageIdx] = {flag1: false, flag2: false};
+        if (!window.doubleFlagState[stageIdx]) window.doubleFlagState[stageIdx] = { flag1: false, flag2: false };
         const state = window.doubleFlagState[stageIdx];
         if (which === 1) {
           const input1 = document.getElementById(`flagInput${stageIdx}`).value.trim();
@@ -471,26 +488,30 @@ Upon reaching this stage, a hidden message from Dr. Thorne appears on your scree
         }
         return;
       }
-      // For final stage Slack link validation
-      if (stageIdx === 5 && s.flagLabel) {
+
+      // For final stage (Heart of the Phoenix, index 5) - accept any input
+      if (stageIdx === 5) {
         const input = document.getElementById(`flagInput${stageIdx}`).value.trim();
-        try {
-          const url = new URL(input);
-          if (url.hostname.includes('slack.com')) {
-            feedback.textContent = s.success;
-            feedback.style.color = '#00ff9c';
-            completedFlags[stageIdx] = true;
-            renderStages();
+        if (input) {
+          feedback.textContent = s.success;
+          feedback.style.color = '#00ff9c';
+          completedFlags[stageIdx] = true;
+          if (stageIdx === currentStage && currentStage < stages.length - 1) {
+            setTimeout(() => {
+              currentStage++;
+              renderStages();
+            }, 900);
           } else {
-            feedback.textContent = '❌ Please enter a valid Slack link (should contain slack.com)';
-            feedback.style.color = '#ff4c4c';
+            renderStages();
           }
-        } catch {
+        } else {
           feedback.textContent = '❌ Please enter a valid Slack link (should contain slack.com)';
           feedback.style.color = '#ff4c4c';
         }
         return;
       }
+
+      // Default single-flag check for other stages
       const input = document.getElementById(`flagInput${stageIdx}`).value.trim();
       let expected = s.flag;
       if (isFlagCorrect(input, expected)) {
@@ -524,10 +545,11 @@ Upon reaching this stage, a hidden message from Dr. Thorne appears on your scree
         'Crack the Cipher',
         'Find the Data Ghost',
         'Primary Concern & Patient',
-        'Final Task'
+        'Final Task - Unlock the Launch Console',
+        'Share Workflow (Bonus)'
       ];
       for (let i = 0; i < stages.length; i++) {
-        let label = progressLabels[i] || `Stage ${i+1}`;
+        let label = progressLabels[i] || `Stage ${i + 1}`;
         const li = document.createElement('li');
         li.style = 'margin-bottom:0.7rem;';
         if (completedFlags[i]) {
@@ -543,9 +565,18 @@ Upon reaching this stage, a hidden message from Dr. Thorne appears on your scree
       progressBar.style.width = percent + '%';
       progressCount.textContent = `${completed} of ${stages.length} objectives completed`;
 
+      const launchButtonContainer = document.getElementById('launchButtonContainer');
+      if (completedFlags[5]) { // Check if "Heart of the Phoenix" is complete
+        launchButtonContainer.style.display = 'block';
+        launchButtonContainer.innerHTML = `<button onclick="showLaunchConsole()" style="background:#00ff9c; color:#0f0f0f; border:none; border-radius:6px; font-size:1.1rem; padding:0.7rem 2.2rem; cursor:pointer;">Open Dr. Thorne's Launch Console</button>`;
+      } else {
+        launchButtonContainer.style.display = 'none';
+        launchButtonContainer.innerHTML = '';
+      }
+
       // Attach event listeners for reveal buttons
       document.querySelectorAll('.reveal-btn').forEach(btn => {
-        btn.onclick = function(e) {
+        btn.onclick = function (e) {
           const idx = parseInt(btn.getAttribute('data-idx'));
           const answerSpan = document.getElementById('answer-text-' + idx);
           if (answerSpan.style.display === 'none') {
@@ -553,6 +584,7 @@ Upon reaching this stage, a hidden message from Dr. Thorne appears on your scree
             if (idx < 4) answer = `<span style='font-family:monospace;'>${stages[idx].flag}</span>`;
             else if (idx === 4 && stages[idx].flag && stages[idx].flag2) answer = `<span style='font-family:monospace;'>${stages[idx].flag}</span> & <span style='font-family:monospace;'>${stages[idx].flag2}</span>`;
             else if (idx === 5) answer = `<span style='font-family:monospace;'>AI-generated dashboard image posted in #phoenix-launch-party</span>`;
+            else if (idx === 6) answer = `<span style='font-family:monospace;'>Workflow shared in #ai-at-redox</span>`;
             answerSpan.innerHTML = answer;
             answerSpan.style.display = 'inline';
             btn.textContent = 'Hide';
@@ -565,7 +597,7 @@ Upon reaching this stage, a hidden message from Dr. Thorne appears on your scree
     }
 
     // Modal logic
-    document.addEventListener('click', function(e) {
+    document.addEventListener('click', function (e) {
       if (e.target.classList.contains('tool-btn')) {
         const idx = e.target.getAttribute('data-stage');
         const s = stages[idx];
@@ -587,14 +619,14 @@ Upon reaching this stage, a hidden message from Dr. Thorne appears on your scree
           screenshots = [screenshot];
         }
         if (screenshots.length > 0) {
-          content += screenshots.map((img, idx) => `<button class='showScreenshotBtn' data-img='${img}' style='margin-top:0.7rem; background:#222; color:#00ff9c; border:1px solid #00ff9c; border-radius:4px; font-size:0.98em; padding:0.3em 0.9em; cursor:pointer; margin-right:0.5em;'>Show Screenshot${screenshots.length > 1 ? ' ' + (idx+1) : ''}</button>`).join('');
+          content += screenshots.map((img, idx) => `<button class='showScreenshotBtn' data-img='${img}' style='margin-top:0.7rem; background:#222; color:#00ff9c; border:1px solid #00ff9c; border-radius:4px; font-size:0.98em; padding:0.3em 0.9em; cursor:pointer; margin-right:0.5em;'>Show Screenshot${screenshots.length > 1 ? ' ' + (idx + 1) : ''}</button>`).join('');
         }
         document.getElementById('modalContent').innerHTML = content;
         document.getElementById('modal').style.display = 'flex';
         if (screenshots.length > 0) {
           setTimeout(() => {
             document.querySelectorAll('.showScreenshotBtn').forEach(btn => {
-              btn.onclick = function() {
+              btn.onclick = function () {
                 const img = btn.getAttribute('data-img');
                 let screenshotOverlay = document.getElementById('screenshotOverlay');
                 if (!screenshotOverlay) {
@@ -617,10 +649,10 @@ Upon reaching this stage, a hidden message from Dr. Thorne appears on your scree
                     </div>
                   `;
                   document.body.appendChild(screenshotOverlay);
-                  document.getElementById('closeScreenshotOverlay').onclick = function() {
+                  document.getElementById('closeScreenshotOverlay').onclick = function () {
                     screenshotOverlay.remove();
                   };
-                  screenshotOverlay.onclick = function(ev) {
+                  screenshotOverlay.onclick = function (ev) {
                     if (ev.target === screenshotOverlay) screenshotOverlay.remove();
                   };
                   // ESC key closes overlay
@@ -644,7 +676,7 @@ Upon reaching this stage, a hidden message from Dr. Thorne appears on your scree
     });
 
     // Close modal on ESC
-    document.addEventListener('keydown', function(e) {
+    document.addEventListener('keydown', function (e) {
       if (e.key === 'Escape') document.getElementById('modal').style.display = 'none';
     });
 
@@ -664,7 +696,7 @@ Upon reaching this stage, a hidden message from Dr. Thorne appears on your scree
       instructionsVisible = true;
     }
 
-    toggleInstructions.addEventListener('click', function() {
+    toggleInstructions.addEventListener('click', function () {
       if (instructionsVisible) {
         hideInstructions();
       } else {
@@ -673,14 +705,14 @@ Upon reaching this stage, a hidden message from Dr. Thorne appears on your scree
     });
     // Hide instructions on any keypress (only the first time)
     let instructionsAutoCollapsed = false;
-    document.addEventListener('keydown', function() {
+    document.addEventListener('keydown', function () {
       if (instructionsVisible && !instructionsAutoCollapsed) {
         hideInstructions();
         instructionsAutoCollapsed = true;
       }
     });
     // Hide instructions on first click anywhere except the button (only the first time)
-    document.addEventListener('click', function(e) {
+    document.addEventListener('click', function (e) {
       if (instructionsVisible && !instructionsAutoCollapsed && e.target.id !== 'toggleInstructions') {
         hideInstructions();
         instructionsAutoCollapsed = true;
@@ -693,7 +725,7 @@ Upon reaching this stage, a hidden message from Dr. Thorne appears on your scree
   </script>
   <script>
     // --- Binary Matrix Animation ---
-    (function() {
+    (function () {
       const canvas = document.getElementById('binary-bg');
       const ctx = canvas.getContext('2d');
       let width = window.innerWidth;
@@ -781,7 +813,7 @@ Upon reaching this stage, a hidden message from Dr. Thorne appears on your scree
       document.body.appendChild(overlay);
     }
 
-    document.getElementById('skipToFinaleBtn').onclick = function() {
+    document.getElementById('skipToFinaleBtn').onclick = function () {
       showLaunchConsole();
     };
   </script>
@@ -798,14 +830,15 @@ Upon reaching this stage, a hidden message from Dr. Thorne appears on your scree
       for (let i = 0; i < stages.length; i++) {
         const opt = document.createElement('option');
         opt.value = i;
-        opt.textContent = `${i+1}: ${stages[i].title.replace(/<[^>]+>/g, '').replace(/Stage \d+: /, '').slice(0, 40)}`;
+        opt.textContent = `${i + 1}: ${stages[i].title.replace(/<[^>]+>/g, '').replace(/Stage \d+: /, '').slice(0, 40)}`;
         select.appendChild(opt);
       }
-      skipDiv.querySelector('#devSkipBtn').onclick = function() {
+      skipDiv.querySelector('#devSkipBtn').onclick = function () {
         currentStage = parseInt(select.value);
         renderStages();
       };
     }
   </script>
 </body>
+
 </html>
