@@ -35,6 +35,7 @@
       border: 1px solid #00ff9c;
       color: #00ff9c;
       margin-bottom: 1rem;
+      font-family: 'Courier New', monospace;
     }
 
     button {
@@ -44,6 +45,7 @@
       padding: 0.8rem 1.2rem;
       font-size: 1rem;
       cursor: pointer;
+      font-family: 'Courier New', monospace;
     }
 
     .feedback {
@@ -112,6 +114,81 @@
       right: 18px;
       cursor: pointer;
       font-size: 1.5rem;
+    }
+
+    @keyframes konami-glitch-anim {
+      0%, 100% {
+        transform: translate(0, 0) skew(0);
+        filter: none;
+      }
+      15% {
+        transform: translate(-5px, 5px) skew(-3deg);
+        filter: hue-rotate(45deg);
+      }
+      30% {
+        transform: translate(5px, -5px) skew(3deg);
+        filter: invert(1);
+      }
+      45% {
+        transform: translate(-5px, -5px) skew(-3deg);
+        filter: hue-rotate(135deg);
+      }
+      60% {
+        transform: translate(5px, 5px) skew(3deg);
+        filter: invert(0);
+      }
+      75% {
+        transform: translate(-5px, 5px) skew(-3deg);
+        filter: hue-rotate(225deg);
+      }
+      90% {
+        transform: translate(5px, -5px) skew(3deg);
+        filter: invert(1);
+      }
+    }
+
+    .konami-glitch-effect {
+      animation: konami-glitch-anim 1s linear 3;
+    }
+
+    .thorne-transmission {
+      position: fixed;
+      bottom: 2rem;
+      left: 50%;
+      transform: translateX(-50%);
+      background: #181818;
+      border: 2px solid #ff9900;
+      color: #ff9900;
+      padding: 1rem 1.5rem;
+      border-radius: 8px;
+      z-index: 10000;
+      font-family: 'Courier New', monospace;
+      max-width: 80%;
+      text-align: center;
+      box-shadow: 0 0 15px #ff990088;
+      animation: fadeInOut 5s ease-in-out forwards;
+    }
+
+    @keyframes fadeInOut {
+      0% {
+        opacity: 0;
+        transform: translate(-50%, 20px);
+      }
+
+      10% {
+        opacity: 1;
+        transform: translate(-50%, 0);
+      }
+
+      90% {
+        opacity: 1;
+        transform: translate(-50%, 0);
+      }
+
+      100% {
+        opacity: 0;
+        transform: translate(-50%, -20px);
+      }
     }
   </style>
   <style>
@@ -199,6 +276,16 @@
   </div>
 
   <script>
+    // --- Easter Egg for Inspectors ---
+    console.log(
+      "%cACCESS DENIED: Mainframe Security",
+      "color: #ff4c4c; font-size: 24px; font-family: 'Courier New', monospace; font-weight: bold; text-shadow: 0 0 5px #ff4c4c;"
+    );
+    console.log(
+      "%cDr. Thorne anticipated this. He built the protocol to test your understanding, not your inspection skills. The flags are earned, not found. Close this console and walk the path. (Or, if you must, try 'thorne.help()' for system diagnostics.)",
+      "color: #00ff9c; font-size: 16px; font-family: 'Courier New', monospace; line-height: 1.5;"
+    );
+
     // --- Challenge Data ---
     const stages = [
       {
@@ -243,13 +330,11 @@
       {
         title: 'Stage 4: The Ghost in the Data',
         scenario: '<em>Purpose, promise, principle. What\'s next? Purity. Aris was obsessed with the integrity of the training data. His notes say he planted a "ghost"—a single, nonsensical piece of data in the master data dictionary. He believed if I couldn\'t find his tiny ghost in this massive haystack, I wouldn\'t be qualified to protect the live project from real-world data corruption.</em>',
-        objective: 'Find the anomalous, non-healthcare acronym in the project\'s data dictionary (which may be in NotebookLM or Google Sheets).',
+        objective: 'Find the anomalous, non-healthcare acronym in the project\'s data dictionary (in Google Sheets).',
         tool: [
-          'Gemini in \n<a href="https://docs.google.com/spreadsheets/d/17UtkBYYOptzj48LmU0L2gn76mZsC_zZtC8Uli3Z7MTE/edit?gid=333471115#gid=333471115" target="_blank" rel="noopener noreferrer">Google Sheets</a>',
-          '\n OR \n',
-          '<a href="https://notebooklm.google.com/notebook/62cc5340-6914-4b39-b3fc-1062b3c539ab" target="_blank" rel="noopener noreferrer">NotebookLM</a>'
+          'Gemini in \n<a href="https://docs.google.com/spreadsheets/d/17UtkBYYOptzj48LmU0L2gn76mZsC_zZtC8Uli3Z7MTE/edit?gid=333471115#gid=333471115" target="_blank" rel="noopener noreferrer">Google Sheets</a>'
         ].join(' '),
-        prompt: 'Open the "Phoenix Master Dictionary" Google Sheet or NotebookLM document. Use AI to scan the list and identify the one acronym that does not belong.',
+        prompt: 'Open the "Phoenix Master Dictionary" Google Sheet. Use AI to scan the list and identify the one acronym that does not belong.',
         flag: 'PZA',
         flagLabel: 'Enter Key Insight #4',
         flagPlaceholder: 'e.g. ___',
@@ -323,9 +408,52 @@
       }
     ];
 
+    const progressLabels = [
+      'Find the Manifesto',
+      'Find the Slogan',
+      'Crack the Cipher',
+      'Find the Data Ghost',
+      'Primary Concern & Patient',
+      'Final Task - Unlock the Launch Console',
+      'Share Workflow (Bonus)'
+    ];
+
+    const thorneMessages = [
+      "First step's the deepest. You understand the 'why'. Good.",
+      "A promise to the public... easy to make, hard to keep. Don't forget it.",
+      "Ah, the paradox at the heart of it all. To promise certainty is to promise a lie. You see.",
+      "Data purity. A single flaw can corrupt the whole system. You found my little test. Impressive.",
+      "You see past the code and into the human cost. This is what matters most.",
+      "The final choice. The machine is a mirror. It will reflect the values of its guide. Choose well.",
+      "Knowledge is a tool. The best tools are shared. Well done."
+    ];
+
     let currentStage = 0;
     const stagesDiv = document.getElementById('stages');
     let completedFlags = [];
+
+    function logThorneMessage(stageIdx) {
+      if (thorneMessages[stageIdx]) {
+        // Also log to console for the curious
+        console.log(
+          `%cINCOMING TRANSMISSION - Dr. Aris Thorne: %c${thorneMessages[stageIdx]}`,
+          "color: #ff9900; font-weight: bold; font-family: 'Courier New', monospace;",
+          "color: #ff9900; font-family: 'Courier New', monospace;"
+        );
+
+        const transmissionDiv = document.createElement('div');
+        transmissionDiv.className = 'thorne-transmission';
+        transmissionDiv.innerHTML = `
+          <strong style="display:block; margin-bottom:0.3rem;">INCOMING TRANSMISSION - Dr. Aris Thorne</strong>
+          <em>${thorneMessages[stageIdx]}</em>
+        `;
+        document.body.appendChild(transmissionDiv);
+
+        setTimeout(() => {
+          transmissionDiv.remove();
+        }, 5000); // Match animation duration
+      }
+    }
 
     function renderStages() {
       stagesDiv.innerHTML = '';
@@ -339,11 +467,7 @@
             const stageDiv = document.createElement('div');
             stageDiv.className = 'stage';
             stageDiv.style = 'margin-bottom:1.2rem; border-bottom:1px solid #222; padding-bottom:1rem;';
-            let label = '';
-            if (i < 4) label = `Flag ${i + 1}`;
-            else if (i === 4) label = 'Most Common Complaint';
-            else if (i === 5) label = 'Final Task - Unlock the Launch Console';
-            else if (i === 6) label = 'Bonus Task';
+            let label = progressLabels[i] || `Stage ${i + 1}`;
             stageDiv.innerHTML = `<span style='font-weight:bold;'>✔️ ${label}</span> <button class='show-stage-instructions-btn' data-stage='${i}' style='margin-left:0.7em; background:#222; color:#00ff9c; border:1px solid #00ff9c; border-radius:4px; font-size:0.9em; padding:0.1em 0.7em; cursor:pointer;'>Show Details</button><div class='stage-instructions' id='stage-instructions-${i}' style='display:none; margin-top:0.7em; font-size:0.97em; color:#00ff9c; background:#181818; border:1px solid #00ff9c; border-radius:6px; padding:0.7em 1em;'></div>`;
             stagesDiv.appendChild(stageDiv);
           }
@@ -360,11 +484,11 @@
             <button class="tool-btn" data-stage="${i}" data-type="tool" style="margin-bottom:0.5rem; background:#181818; color:#00ff9c; border:1px solid #00ff9c; padding:0.5rem 1rem; border-radius:5px; margin-right:0.5rem;">Show Suggested Tool</button>
             <button class="tool-btn" data-stage="${i}" data-type="prompt" style="margin-bottom:1rem; background:#181818; color:#00ff9c; border:1px solid #00ff9c; padding:0.5rem 1rem; border-radius:5px;">Show Suggested Prompt</button>
             ${s.flagLabel && s.flagLabel2 && i === 4 ?
-              `<input id="flagInput${i}" type="text" placeholder="${s.flagPlaceholder}" style="width:70%; margin-right:0.5rem; background:#1f1f1f; color:#00ff9c; border:1px solid #00ff9c; padding:0.5rem;" /> <button onclick="submitFlag(${i}, 1)" style="background:#00ff9c; color:#0f0f0f; border:none; padding:0.5rem 1rem;">Submit</button><br><input id="flagInput${i}_2" type="text" placeholder="${s.flagPlaceholder2}" style="width:70%; margin-right:0.5rem; background:#1f1f1f; color:#00ff9c; border:1px solid #00ff9c; padding:0.5rem; margin-top:0.5rem;" /> <button onclick="submitFlag(${i}, 2)" style="background:#00ff9c; color:#0f0f0f; border:none; padding:0.5rem 1rem;">Submit</button>`
+              `<input id="flagInput${i}" type="text" placeholder="${s.flagPlaceholder}" style="width:70%; margin-right:0.5rem; background:#1f1f1f; color:#00ff9c; border:1px solid #00ff9c; padding:0.5rem;" onkeydown="if(event.key==='Enter') submitFlag(${i}, 1)" /> <button onclick="submitFlag(${i}, 1)" style="background:#00ff9c; color:#0f0f0f; border:none; padding:0.5rem 1rem;">Submit</button><br><input id="flagInput${i}_2" type="text" placeholder="${s.flagPlaceholder2}" style="width:70%; margin-right:0.5rem; background:#1f1f1f; color:#00ff9c; border:1px solid #00ff9c; padding:0.5rem; margin-top:0.5rem;" onkeydown="if(event.key==='Enter') submitFlag(${i}, 2)" /> <button onclick="submitFlag(${i}, 2)" style="background:#00ff9c; color:#0f0f0f; border:none; padding:0.5rem 1rem;">Submit</button>`
               : s.isOptionalTask ?
                 `<button onclick="submitFlag(${i})" style="background:#00ff9c; color:#0f0f0f; border:none; padding:0.5rem 1rem; margin-top:0.5rem;">I've Shared My Workflow</button>`
               : s.flagLabel ?
-                `<input id="flagInput${i}" type="text" placeholder="${s.flagPlaceholder}" style="width:70%; margin-right:0.5rem; background:#1f1f1f; color:#00ff9c; border:1px solid #00ff9c; padding:0.5rem;" /> <button onclick="submitFlag(${i})" style="background:#00ff9c; color:#0f0f0f; border:none; padding:0.5rem 1rem;">Submit</button>`
+                `<input id="flagInput${i}" type="text" placeholder="${s.flagPlaceholder}" style="width:70%; margin-right:0.5rem; background:#1f1f1f; color:#00ff9c; border:1px solid #00ff9c; padding:0.5rem;" onkeydown="if(event.key==='Enter') submitFlag(${i})" /> <button onclick="submitFlag(${i})" style="background:#00ff9c; color:#0f0f0f; border:none; padding:0.5rem 1rem;">Submit</button>`
                 : ''}
             <div id="feedback${i}" class="feedback"></div>
           `;
@@ -442,6 +566,9 @@
       if (s.isOptionalTask) {
         feedback.textContent = s.success;
         feedback.style.color = '#00ff9c';
+        if (!completedFlags[stageIdx]) {
+          logThorneMessage(stageIdx);
+        }
         completedFlags[stageIdx] = true;
         renderStages();
         return;
@@ -476,6 +603,9 @@
         if (state.flag1 && state.flag2) {
           feedback.textContent = s.success;
           feedback.style.color = '#00ff9c';
+          if (!completedFlags[stageIdx]) {
+            logThorneMessage(stageIdx);
+          }
           completedFlags[stageIdx] = true;
           if (stageIdx === currentStage && currentStage < stages.length - 1) {
             setTimeout(() => {
@@ -495,6 +625,9 @@
         if (input) {
           feedback.textContent = s.success;
           feedback.style.color = '#00ff9c';
+          if (!completedFlags[stageIdx]) {
+            logThorneMessage(stageIdx);
+          }
           completedFlags[stageIdx] = true;
           if (stageIdx === currentStage && currentStage < stages.length - 1) {
             setTimeout(() => {
@@ -517,6 +650,9 @@
       if (isFlagCorrect(input, expected)) {
         feedback.textContent = s.success;
         feedback.style.color = '#00ff9c';
+        if (!completedFlags[stageIdx]) {
+          logThorneMessage(stageIdx);
+        }
         completedFlags[stageIdx] = true;
         if (stageIdx === currentStage && currentStage < stages.length - 1) {
           setTimeout(() => {
@@ -539,22 +675,19 @@
       progressList.innerHTML = '';
       let completed = 0;
       // Use more descriptive labels for each stage
-      const progressLabels = [
-        'Find the Manifesto',
-        'Find the Slogan',
-        'Crack the Cipher',
-        'Find the Data Ghost',
-        'Primary Concern & Patient',
-        'Final Task - Unlock the Launch Console',
-        'Share Workflow (Bonus)'
-      ];
       for (let i = 0; i < stages.length; i++) {
-        let label = progressLabels[i] || `Stage ${i + 1}`;
+        let label;
+        if (i <= currentStage) {
+          label = progressLabels[i] || `Stage ${i + 1}`;
+        } else {
+          label = `[Objective Locked]`;
+        }
+
         const li = document.createElement('li');
         li.style = 'margin-bottom:0.7rem;';
         if (completedFlags[i]) {
           // Add a reveal button for completed checkpoints
-          li.innerHTML = `✅ <span>${label}</span> <button class='reveal-btn' data-idx='${i}' style='margin-left:0.5em; background:#222; color:#00ff9c; border:1px solid #00ff9c; border-radius:4px; font-size:0.9em; padding:0.1em 0.7em; cursor:pointer;'>Reveal</button><span class='answer-text' id='answer-text-${i}' style='display:none; margin-left:0.5em;'></span>`;
+          li.innerHTML = `✅ <span>${progressLabels[i] || `Stage ${i + 1}`}</span> <button class='reveal-btn' data-idx='${i}' style='margin-left:0.5em; background:#222; color:#00ff9c; border:1px solid #00ff9c; border-radius:4px; font-size:0.9em; padding:0.1em 0.7em; cursor:pointer;'>Reveal</button><span class='answer-text' id='answer-text-${i}' style='display:none; margin-left:0.5em;'></span>`;
           completed++;
         } else {
           li.innerHTML = `⬜ <span>${label}</span>`;
@@ -817,7 +950,6 @@
       showLaunchConsole();
     };
   </script>
-
   <script>
     // Add dev skip controls if in dev mode
     if (window.location.hostname === 'localhost' || window.location.search.includes('dev') || window.DEV_MODE) {
@@ -838,6 +970,71 @@
         renderStages();
       };
     }
+  </script>
+  <script>
+    // --- Konami Code Easter Egg ---
+    (function() {
+      const konamiCode = ['ArrowUp', 'ArrowUp', 'ArrowDown', 'ArrowDown', 'ArrowLeft', 'ArrowRight', 'ArrowLeft', 'ArrowRight', 'b', 'a'];
+      let konamiCodePosition = 0;
+
+      function triggerKonamiEffect() {
+        console.log("%cPHOENIX OVERRIDE: Konami sequence accepted. System integrity compromised. 🍪", "color: #ff9900; font-size: 18px; font-family: 'Courier New', monospace;");
+        document.body.classList.add('konami-glitch-effect');
+        setTimeout(() => {
+          document.body.classList.remove('konami-glitch-effect');
+        }, 3000); // Match animation duration (1s * 3 iterations)
+      }
+
+      document.addEventListener('keydown', function(e) {
+        if (e.key.toLowerCase() === konamiCode[konamiCodePosition].toLowerCase()) {
+          konamiCodePosition++;
+          if (konamiCodePosition === konamiCode.length) {
+            triggerKonamiEffect();
+            konamiCodePosition = 0; // Reset for next time
+          }
+        } else {
+          konamiCodePosition = 0;
+        }
+      });
+    })();
+  </script>
+  <script>
+    // --- Hidden Console Command Easter Egg ---
+    (function() {
+      const phoenixArt = `
+'\\-''-./\`
+ )  _  (
+/   (   \\
+(  /\\)  )
+ \\  _  /
+  '.''./
+ /\`'--'\\
+/       \\
+`;
+      window.thorne = {
+        help: function() {
+          console.log(
+            "%cDr. Thorne's Diagnostic Toolkit:\n%c  thorne.help()      - Displays this help message.\n  thorne.status()    - Checks system integrity.\n  thorne.protocol(key) - Executes a specific protocol.",
+            "color: #00ff9c; font-size: 16px; font-weight: bold;",
+            "color: #00ff9c; font-size: 14px; line-height: 1.5;"
+          );
+        },
+        status: function() {
+          console.log("%cSYSTEM STATUS: All protocols nominal. Launch sequence is locked pending consultant verification.", "color: #00ff9c;");
+        },
+        protocol: function(key) {
+          if (key && key.toLowerCase() === 'phoenix') {
+            console.log(
+              `%c${phoenixArt}`,
+              "color: #ff9900; font-size: 14px; font-family: 'Courier New', monospace; line-height: 1;"
+            );
+            console.log("%cProtocol 'Phoenix' is the failsafe. It cannot be executed from a sub-terminal. Nice try.", "color: #ff9900; font-size: 16px;");
+          } else {
+            console.log(`%cERROR: Protocol '${key || ''}' not recognized or requires higher clearance.`, "color: #ff4c4c;");
+          }
+        }
+      };
+    })();
   </script>
 </body>
 
