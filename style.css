@@ -1,0 +1,327 @@
+body {
+  font-family: 'Courier New', monospace;
+  background-color: #0f0f0f;
+  color: #00ff9c;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 2rem;
+}
+
+h1 {
+  color: #00ff9c;
+  font-size: 2rem;
+  margin-bottom: 1rem;
+}
+
+.container {
+  max-width: 600px;
+  width: 100%;
+}
+
+input[type="text"] {
+  width: 100%;
+  padding: 0.8rem;
+  font-size: 1rem;
+  background-color: #1f1f1f;
+  border: 1px solid #00ff9c;
+  color: #00ff9c;
+  margin-bottom: 1rem;
+  font-family: 'Courier New', monospace;
+}
+
+button {
+  background-color: #00ff9c;
+  color: #0f0f0f;
+  border: none;
+  padding: 0.8rem 1.2rem;
+  font-size: 1rem;
+  cursor: pointer;
+  font-family: 'Courier New', monospace;
+}
+
+.feedback {
+  margin-top: 1rem;
+  font-size: 1.1rem;
+}
+
+.instructions {
+  font-size: 0.95rem;
+  margin-bottom: 2rem;
+  line-height: 1.5;
+}
+
+.footer {
+  margin-top: 4rem;
+  font-size: 0.8rem;
+  color: #888;
+}
+
+.stage {
+  margin-bottom: 2.5rem;
+  border-bottom: 1px solid #222;
+  padding-bottom: 2rem;
+}
+
+.tool-btn {
+  margin-bottom: 1rem;
+  background: #181818;
+  color: #00ff9c;
+  border: 1px solid #00ff9c;
+  padding: 0.5rem 1rem;
+  border-radius: 5px;
+}
+
+#modal {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(15, 15, 15, 0.95);
+  z-index: 1000;
+  align-items: center;
+  justify-content: center;
+}
+
+#modalContent {
+  background: #181818;
+  border: 2px solid #00ff9c;
+  color: #00ff9c;
+  padding: 2rem;
+  max-width: 400px;
+  border-radius: 10px;
+  position: relative;
+  word-break: break-word;
+  white-space: pre-line;
+  overflow-wrap: break-word;
+  overflow-x: auto;
+  box-sizing: border-box;
+}
+
+#modalClose {
+  position: absolute;
+  top: 10px;
+  right: 18px;
+  cursor: pointer;
+  font-size: 1.5rem;
+}
+
+@keyframes konami-glitch-anim {
+  0%, 100% {
+    transform: translate(0, 0) skew(0);
+    filter: none;
+  }
+  15% {
+    transform: translate(-5px, 5px) skew(-3deg);
+    filter: hue-rotate(45deg);
+  }
+  30% {
+    transform: translate(5px, -5px) skew(3deg);
+    filter: invert(1);
+  }
+  45% {
+    transform: translate(-5px, -5px) skew(-3deg);
+    filter: hue-rotate(135deg);
+  }
+  60% {
+    transform: translate(5px, 5px) skew(3deg);
+    filter: invert(0);
+  }
+  75% {
+    transform: translate(-5px, 5px) skew(-3deg);
+    filter: hue-rotate(225deg);
+  }
+  90% {
+    transform: translate(5px, -5px) skew(3deg);
+    filter: invert(1);
+  }
+}
+
+.konami-glitch-effect {
+  animation: konami-glitch-anim 1s linear 3;
+}
+
+.thorne-transmission {
+  position: fixed;
+  bottom: 2rem;
+  left: 50%;
+  transform: translateX(-50%);
+  background: #181818;
+  border: 2px solid #ff9900;
+  color: #ff9900;
+  padding: 1rem 1.5rem;
+  border-radius: 8px;
+  z-index: 10000;
+  font-family: 'Courier New', monospace;
+  max-width: 80%;
+  text-align: center;
+  box-shadow: 0 0 15px #ff990088;
+  animation: fadeInOut 5s ease-in-out forwards;
+}
+
+@keyframes fadeInOut {
+  0% {
+    opacity: 0;
+    transform: translate(-50%, 20px);
+  }
+
+  10% {
+    opacity: 1;
+    transform: translate(-50%, 0);
+  }
+
+  90% {
+    opacity: 1;
+    transform: translate(-50%, 0);
+  }
+
+  100% {
+    opacity: 0;
+    transform: translate(-50%, -20px);
+  }
+}
+
+/* Animated binary background */
+#binary-bg {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: 0;
+  pointer-events: none;
+  opacity: 0.13;
+  background: transparent;
+}
+
+body,
+.container,
+#mainStages,
+#progressChecklist,
+.footer {
+  position: relative;
+  z-index: 1;
+}
+
+.progress-collapsible {
+  background: #181818;
+  border: 2px solid #00ff9c;
+  border-radius: 10px;
+  padding: 1.5rem 1rem;
+  min-width: 220px;
+  max-width: 270px;
+  color: #00ff9c;
+  position: sticky;
+  top: 2rem;
+  height: fit-content;
+  align-self: flex-start;
+  margin-bottom: 1.5rem;
+  /* Desktop: right side */
+  margin-left: 2.5rem;
+}
+
+.progress-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.progress-toggle-btn {
+  background: none;
+  border: none;
+  color: #00ff9c;
+  font-size: 1.3em;
+  cursor: pointer;
+  margin-left: 0.5em;
+  padding: 0;
+  transition: transform 0.2s;
+}
+
+.progress-toggle-btn[aria-expanded="true"] {
+  transform: rotate(180deg);
+}
+
+.progress-content {
+  transition: max-height 0.3s, opacity 0.3s;
+  overflow: hidden;
+}
+
+.progress-list-details-btn {
+  background: #222;
+  color: #00ff9c;
+  border: 1px solid #00ff9c;
+  border-radius: 4px;
+  font-size: 0.9em;
+  padding: 0.1em 0.7em;
+  cursor: pointer;
+  margin-left: 0.5em;
+  margin-top: 0.2em;
+  margin-bottom: 0.2em;
+  transition: background 0.2s;
+}
+
+.progress-list-details-btn:hover {
+  background: #00ff9c;
+  color: #181818;
+}
+
+@media (max-width: 700px) {
+  .container {
+    flex-direction: column !important;
+    max-width: 100vw;
+    padding: 0;
+  }
+  #mainStages {
+    width: 100% !important;
+    max-width: 100vw !important;
+    margin: 0 !important;
+    flex: unset !important;
+  }
+  .progress-collapsible {
+    width: 90vw !important;
+    max-width: 90vw !important;
+    min-width: 0 !important;
+    border-radius: 0 0 10px 10px;
+    position: relative !important;
+    margin: 0 0 1.5rem 0 !important;
+    top: 0 !important;
+    z-index: 10;
+    box-sizing: border-box;
+    padding: 0.7rem 0.7rem 1.2rem 0.7rem;
+    margin-left: 0 !important;
+    align-self: unset;
+    order: -1; /* Move to top in flex container */
+  }
+  .progress-header {
+    padding: 0.5rem 0.2rem 0.5rem 0.2rem;
+    border-bottom: 1px solid #00ff9c33;
+    margin-bottom: 0.2rem;
+  }
+  .progress-toggle-btn {
+    display: inline !important;
+  }
+  .progress-content {
+    max-height: 0;
+    opacity: 0;
+    pointer-events: none;
+    padding: 0;
+  }
+  .progress-collapsible.expanded .progress-content {
+    max-height: 800px;
+    opacity: 1;
+    pointer-events: auto;
+    padding-top: 0.7rem;
+  }
+}
+    margin-left: 0 !important;
+  }
+}
+
+/* Center the X on the green screenshot close circle */
+#closeScreenshotOverlay {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
