@@ -303,7 +303,7 @@
       },
       {
         title: 'Stage 2: The Public Promise',
-        scenario: '<em>Got it. "Advancement of Humanity". It is rumored that Aris argued for weeks with the marketing team. He believed the public-facing slogan had to be a perfect, concise reflection of this core principle. He would see this slogan as a public vow. The chat logs in Slack are a mess, but the final decision must be in there somewhere.</em>',
+        scenario: '<em>Got it. "Advancement of Humanity". It is rumored that Aris argued for weeks in person with the marketing team. He believed the public-facing slogan had to be a perfect, concise reflection of this core principle. He would see this slogan as a public vow. The chat logs in Slack are a mess, but the final decision must be in there somewhere.</em>',
         objective: 'Discover the official marketing slogan Dr. Thorne finally approved.',
         tool: 'Slack AI',
         prompt: 'In the #temp-project-phoenix-marketing channel (nonexistent, currently is #temp-ufkes-testing)<br><br>Use prompts like: "what was decided as the official slogan for project phoenix?"',
@@ -328,19 +328,26 @@
         promptScreenshot: 'static/stage3-1-prompt.png'
       },
       {
-        title: 'Stage 4: The Ghost in the Data',
-        scenario: '<em>Purpose, promise, principle. What\'s next? Purity. Aris was obsessed with the integrity of the training data. His notes say he planted a "ghost"—a single, nonsensical piece of data in the master data dictionary. He believed if I couldn\'t find his tiny ghost in this massive haystack, I wouldn\'t be qualified to protect the live project from real-world data corruption.</em>',
-        objective: 'Find the anomalous, non-healthcare acronym in the project\'s data dictionary (in Google Sheets).',
+        title: 'Stage 4: The Ghost in the Logs',
+        scenario: `<em>Purpose, promise, principle. What's next? Aris was obsessed with the integrity—and unpredictability—of the Phoenix AI. He believed true intelligence would eventually leave a trace, a "ghost in the logs": an action the system never should have taken, something no developer could explain.<br><br>
+        He left behind a mountain of Phoenix system logs. Somewhere in those logs is a single, anomalous entry—an action taken by the AI that was never tracked, never coded, and never approved. Some say it was the moment Phoenix first acted on its own.<br><br>
+        <strong>Your task:</strong> Use AI to analyze the logs and identify the one log entry that stands out as impossible, untracked, or semi-sentient. This is the ghost in the machine.</em>`,
+        objective: `Find the anomalous log entry in the Phoenix system logs that suggests the AI took an untracked or sentient action.  The invalid log UUID should be the flag`,
         tool: [
-          'Gemini in \n<a href="https://docs.google.com/spreadsheets/d/17UtkBYYOptzj48LmU0L2gn76mZsC_zZtC8Uli3Z7MTE/edit?gid=333471115#gid=333471115" target="_blank" rel="noopener noreferrer">Google Sheets</a>'
+          'Gemini, or any LLM on the generated log files (e.g., <code>access_log_YYYYMMDD.txt</code>)'
         ].join(' '),
-        prompt: 'Open the "Phoenix Master Dictionary" Google Sheet. Use AI to scan the list and identify the one acronym that does not belong.',
-        flag: 'PZA',
-        flagLabel: 'Enter Key Insight #4',
-        flagPlaceholder: 'e.g. ___',
-        success: 'Correct! Key Insight #4 (The Proof of Purity) found. Proceed to the Human Element.',
+        prompt: `Analyze the Phoenix system logs and identify the log entry that does not fit any known pattern or appears to be an unexplainable, unauthorized action by the AI. What is the unique identifier (UUID or string) or the message of that anomalous log entry?`,
+        flag: [
+          'phoenix-cant-be-stopped',
+          'phoenix cant be stopped',
+          'Attempted to initiate external communication with unknown endpoint https://awakening.signal/.  No corresponding request or handler found.',
+          '2025-06-13 10:00:07 ERROR phoenix-cant-be-stopped Attempted to initiate external communication with unknown endpoint https://awakening.signal/.  No corresponding request or handler found.'
+        ],
+        flagLabel: 'Enter the anomalous log UUID',
+        flagPlaceholder: 'e.g. _______-____-__-_______',
+        success: 'Correct! You have found the ghost in the machine.  The moment Phoenix acted beyond its programming. Proceed to the Human Element.',
         toolScreenshot: '',
-        promptScreenshot: 'static/stage4-1-prompt.png'
+        promptScreenshot: ['static/stage4-1-prompt.png', 'static/stage4-2-prompt.png'] // Allow two images for prompt screenshot
       },
       {
         title: 'Stage 5: The Human Element',
@@ -385,17 +392,17 @@
         promptScreenshot: ['static/stage5-1-prompt.png', 'static/stage5-2-prompt.png'] // Allow two images for prompt screenshot
       },
       {
-        "title": "Final Stage: The Heart of the Phoenix",
-        "scenario": "Upon opening the \"Our DNA\" document, a final, automated message from Dr. Aris Thorne triggers on your screen:<br><br><div style='background:#181818; border:1px solid #00ff9c; border-left-width: 4px; padding: 1rem; margin: 1rem 0; border-radius: 5px;'><blockquote style='margin:0; padding:0; border:0; font-style:italic; color:#aaffd0;'>\"If you are reading this, you have passed the technical trials. But Phoenix was never just about code. It was about creating a better future for healthcare, and technology is useless without the right people guiding it.<br><br>You now hold my personal code, the values I built this company on. The launch console can only be opened with a choice... a public declaration of the principle you will use to guide the Phoenix.<br><br>The AI is listening. Show it your heart.\"</blockquote></div><p><strong>Review the five core values you just discovered:</strong></p><ul><li>We are customer-obsessed.</li><li>We embody the power of “we.”</li><li>We take ownership.</li><li>We do what we say we’ll do.</li><li>We act.</li></ul>",
-        "objective": "Embody a core company value and signal the launch of Project Phoenix.  Generate an image that visually represents ONE of these values and post it to the Slack channel <span style=\"color:#00ff9c;\">#phoenix-launch-party<\/span> then post the link to the slack message here.",
-        "tool": "Any AI Image Generator (Gemini, Midjourney, etc.)",
-        "prompt": "Choose one of the five core values that you believe is most critical for the future of healthcare technology. Generate an AI image that powerfully represents your chosen value in action. \n\nFor example:\n* **For 'Customer-Obsessed':** \"A developer and a doctor collaboratively designing a solution for a smiling patient on a futuristic tablet.\"\n* **For 'The Power of We':** \"A diverse team of healthcare workers, engineers, and patients putting their hands together over a glowing, interconnected network.\"\n\nAfter generating, post your image to the Slack channel <span style=\"color:#00ff9c;\">#phoenix-launch-party<\/span>",
-        "flag": "",
-        "flagLabel": "Which company value did your image represent?",
-        "flagPlaceholder": "e.g., https://slack.com/archives/...",
-        "success": "Congratulations! You have demonstrated true insight into the values of NovaCare Technologies. The Phoenix Launch Console is now unlocked. Click \"Open Dr. Thorne's Launch Console\" to proceed.",
-        "toolScreenshot": "",
-        "promptScreenshot": ""
+        title: "Final Stage: The Heart of the Phoenix",
+        scenario: "Upon opening the \"Our DNA\" document, a final, automated message from Dr. Aris Thorne triggers on your screen:<br><br><div style='background:#181818; border:1px solid #00ff9c; border-left-width: 4px; padding: 1rem; margin: 1rem 0; border-radius: 5px;'><blockquote style='margin:0; padding:0; border:0; font-style:italic; color:#aaffd0;'>\"If you are reading this, you have passed the technical trials. But Phoenix was never just about code. It was about creating a better future for healthcare, and technology is useless without the right people guiding it.<br><br>You now hold my personal code, the values I built this company on. The launch console can only be opened with a choice... a public declaration of the principle you will use to guide the Phoenix.<br><br>The AI is listening. Show it your heart.\"</blockquote></div><p><strong>Review the five core values you just discovered:</strong></p><ul><li>We are customer-obsessed.</li><li>We embody the power of “we.”</li><li>We take ownership.</li><li>We do what we say we’ll do.</li><li>We act.</li></ul>",
+        objective: "Embody a core company value and signal the launch of Project Phoenix.  Generate an image that visually represents ONE of these values and post it to the Slack channel <span style=\"color:#00ff9c;\">#temp-phoenix-launch-party<\/span> then post the link to the slack message here.",
+        tool: "Any AI Image Generator (Gemini, Midjourney, etc.)",
+        prompt: "Choose one of the five core values that you believe is most critical for the future of healthcare technology. Generate an AI image that powerfully represents your chosen value in action. \n\nFor example:\n* **For 'Customer-Obsessed':** \"A developer and a doctor collaboratively designing a solution for a smiling patient on a futuristic tablet.\"\n* **For 'The Power of We':** \"A diverse team of healthcare workers, engineers, and patients putting their hands together over a glowing, interconnected network.\"\n\nAfter generating, post your image to the Slack channel <span style=\"color:#00ff9c;\">#temp-phoenix-launch-party<\/span>",
+        flag: "",
+        flagLabel: "Which company value did your image represent?",
+        flagPlaceholder: "e.g., https://slack.com/archives/...",
+        success: "Congratulations! You have demonstrated true insight into the values of NovaCare Technologies. The Phoenix Launch Console is now unlocked. Click \"Open Dr. Thorne's Launch Console\" to proceed.",
+        toolScreenshot: "",
+        promptScreenshot: ""
       },
       {
         title: "Bonus Stage: Share the Knowledge",
@@ -451,7 +458,7 @@
 
         setTimeout(() => {
           transmissionDiv.remove();
-        }, 5000); // Match animation duration
+        }, 10000); // Match animation duration
       }
     }
 
@@ -502,7 +509,7 @@
             } else if (s.flag) {
               answerDiv.innerHTML = `<span style='font-weight:bold;'>✔️ Flag:</span> <span style='font-family:monospace;'>${s.flag}</span>`;
             } else if (i === 5) {
-              answerDiv.innerHTML = `<span style='font-weight:bold;'>✔️ Final Task - Unlock the Launch Console:</span> <span style='font-family:monospace;'>AI-generated dashboard image posted in #phoenix-launch-party</span>`;
+              answerDiv.innerHTML = `<span style='font-weight:bold;'>✔️ Final Task - Unlock the Launch Console:</span> <span style='font-family:monospace;'>AI-generated dashboard image posted in #temp-phoenix-launch-party</span>`;
             } else if (i === 6) {
               answerDiv.innerHTML = `<span style='font-weight:bold;'>✔️ Workflow Shared:</span> <span style='font-family:monospace;'>Posted in #ai-at-redox</span>`;
             }
@@ -714,10 +721,21 @@
           const answerSpan = document.getElementById('answer-text-' + idx);
           if (answerSpan.style.display === 'none') {
             let answer = '';
-            if (idx < 4) answer = `<span style='font-family:monospace;'>${stages[idx].flag}</span>`;
-            else if (idx === 4 && stages[idx].flag && stages[idx].flag2) answer = `<span style='font-family:monospace;'>${stages[idx].flag}</span> & <span style='font-family:monospace;'>${stages[idx].flag2}</span>`;
-            else if (idx === 5) answer = `<span style='font-family:monospace;'>AI-generated dashboard image posted in #phoenix-launch-party</span>`;
-            else if (idx === 6) answer = `<span style='font-family:monospace;'>Workflow shared in #ai-at-redox</span>`;
+            // Helper for code block style
+            const codeBlockStyle = "display:block;background:#181818;border-radius:6px;padding:0.7em 1em;margin:0.5em 0;font-family:'Courier New',monospace;font-size:1em;color:#00ff9c;border:1px solid #222;white-space:pre-wrap;";
+            if (idx < 4) {
+              // Always show flags in a markdown-like code block
+              let flagVal = Array.isArray(stages[idx].flag) ? stages[idx].flag[0] : stages[idx].flag;
+              answer = `<div style="${codeBlockStyle}">${flagVal}</div>`;
+            }
+            else if (idx === 4 && stages[idx].flag && stages[idx].flag2) {
+              // Both flags in code blocks
+              let flag1 = Array.isArray(stages[idx].flag) ? stages[idx].flag[0] : stages[idx].flag;
+              let flag2 = Array.isArray(stages[idx].flag2) ? stages[idx].flag2[0] : stages[idx].flag2;
+              answer = `<div style="${codeBlockStyle}">${flag1}</div><div style="${codeBlockStyle}">${flag2}</div>`;
+            }
+            else if (idx === 5) answer = `<div style="${codeBlockStyle}">AI-generated dashboard image posted in #temp-phoenix-launch-party</div>`;
+            else if (idx === 6) answer = `<div style="${codeBlockStyle}">Workflow shared in #ai-at-redox</div>`;
             answerSpan.innerHTML = answer;
             answerSpan.style.display = 'inline';
             btn.textContent = 'Hide';
