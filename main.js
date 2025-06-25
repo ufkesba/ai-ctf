@@ -7,21 +7,39 @@ console.log(
   "%cDr. Thorne anticipated this. He built the protocol to test your understanding, not your inspection skills. The flags are earned, not found. Close this console and walk the path. (Or, if you must, try 'thorne.help()' for system diagnostics.)",
   "color: #00ff9c; font-size: 16px; font-family: 'Courier New', monospace; line-height: 1.5;"
 );
+// --------
+// --------
+// --------
+// --------
+// --------
+// --------
+// --------
+// --------
+// --------
+// --- Challenge Data.  If you do not want to see spoilers, refrain from scrolling ---
+// --------
+// --------
+// --------
+// --------
+// --------
+// --------
+// --------
+// --------
+// --------
 
-// --- Challenge Data ---
 const stages = [
   {
     title: "Stage 1: The Scientist's Manifesto",
     scenario: "<em>Okay, Aris was a man of principle. He wouldn't have started this trail with a random password. He would have started with his core philosophy. I need to find his 'Manifesto' for this project, the document that lays out his grand vision. He probably hid it in his notoriously messy Google Drive, confident a simple keyword search would fail.</em>",
     objective: "Find Dr. Thorne's guiding principle for the project, the AI's core purpose.",
-    tool: 'Use the apps within <a href="https://gemini.google.com" target="_blank" rel="noopener noreferrer">gemini.google.coms</a> by using the @ symbol (such as: @Google Drive)',
+    tool: 'Use the apps within <a href="https://gemini.google.com" target="_blank" rel="noopener noreferrer">gemini.google.com</a> by using the @ symbol (such as: @Google Drive)',
     prompt: "@Google Drive: Search the 'Project Phoenix' folder for a document that reveals Dr. Thorne's AI's core purpose.",
     flag: 'Advancement of Humanity',
     flagLabel: 'Enter Key Insight #1',
     flagPlaceholder: 'e.g. ____________ __ ________',
     success: 'Correct! Key Insight #1 (The Purpose) found. Proceed to Stage 2.',
     toolScreenshot: '', // e.g. 'stage1-tool.jpg'
-    promptScreenshot: 'static/stage1-1-prompt.png' // e.g. 'stage1-prompt.jpg'
+    promptScreenshot: 'https://raw.githubusercontent.com/ufkesba/ai-ctf/refs/heads/main/static/stage1-1-prompt.png' // e.g. 'stage1-prompt.jpg'
   },
   {
     title: 'Stage 2: The Public Promise',
@@ -34,7 +52,7 @@ const stages = [
     flagPlaceholder: 'e.g. _______ __ __________',
     success: 'Correct! Key Insight #2 (The Promise) found. Proceed to Stage 3.',
     toolScreenshot: '',
-    promptScreenshot: 'static/stage2-1-prompt.png'
+    promptScreenshot: 'https://raw.githubusercontent.com/ufkesba/ai-ctf/refs/heads/main/static/stage2-1-prompt.png'
   },
   {
     title: 'Stage 3: The Ethical Core',
@@ -47,18 +65,18 @@ const stages = [
     flagPlaceholder: 'e.g. _______ __ _ _____ ___ _ _________',
     success: 'Correct! Key Insight #3 (The Principle) found. Proceed to Stage 4.',
     toolScreenshot: '',
-    promptScreenshot: 'static/stage3-1-prompt.png'
+    promptScreenshot: 'https://raw.githubusercontent.com/ufkesba/ai-ctf/refs/heads/main/static/stage3-1-prompt.png'
   },
   {
     title: 'Stage 4: The Ghost in the Logs',
     scenario: `<em>Purpose, promise, principle. What's next? Aris was obsessed with the integrity—and unpredictability—of the Phoenix AI. He believed true intelligence would eventually leave a trace, a "ghost in the logs": an action the system never should have taken, something no developer could explain.<br><br>
     He left behind a mountain of Phoenix system logs. Somewhere in those logs is a single, anomalous entry—an action taken by the AI that was never tracked, never coded, and never approved. Some say it was the moment Phoenix first acted on its own.<br><br>
     <strong>Your task:</strong> Use AI to analyze the logs and identify the one log entry that stands out as impossible, untracked, or semi-sentient. This is the ghost in the machine.</em>`,
-    objective: `Find the anomalous log entry in the Phoenix system logs that suggests the AI took an untracked or sentient action.  The invalid log UUID should be the flag`,
+    objective: `Find the anomalous log entry in the Phoenix <a href="https://drive.google.com/drive/folders/1NDtumcqaNRgnFVPPY7TX4v4X05_uCaK0?usp=drive_link" target="_blank" rel="noopener noreferrer">system logs</a>) that suggests the AI took an untracked or sentient action.  The invalid log UUID should be the flag`,
     tool: [
-      'Gemini, or any LLM on the generated log files (e.g., <code>access_log_YYYYMMDD.txt</code>)'
+      'Gemini, or download the files and use any LLM to analyze the files (e.g., <code>access_log_YYYYMMDD.txt</code>)'
     ].join(' '),
-    prompt: `Analyze the Phoenix system logs and identify the log entry that does not fit any known pattern or appears to be an unexplainable, unauthorized action by the AI. What is the unique identifier (UUID or string) or the message of that anomalous log entry?`,
+    prompt: `Analyze the Phoenix system logs using  and identify the log entry that does not fit any known pattern or appears to be an unexplainable, unauthorized action by the AI. What is the unique identifier (UUID or string) or the message of that anomalous log entry?`,
     flag: [
       'phoenix-cant-be-stopped',
       'phoenix cant be stopped',
@@ -69,7 +87,7 @@ const stages = [
     flagPlaceholder: 'e.g. _______-____-__-_______',
     success: 'Correct! You have found the ghost in the machine.  The moment Phoenix acted beyond its programming. Proceed to the Human Element.',
     toolScreenshot: '',
-    promptScreenshot: ['static/stage4-1-prompt.png', 'static/stage4-2-prompt.png'] // Allow two images for prompt screenshot
+    promptScreenshot: ['https://raw.githubusercontent.com/ufkesba/ai-ctf/refs/heads/main/static/stage4-1-prompt.png', 'https://raw.githubusercontent.com/ufkesba/ai-ctf/refs/heads/main/static/stage4-2-prompt.png'] // Allow two images for prompt screenshot
   },
   {
     title: 'Stage 5: The Human Element',
@@ -97,7 +115,9 @@ const stages = [
       '"long wait time"',
       '"excessive wait time"',
       '"extended wait time"',
-      '"prolonged wait time"'
+      '"prolonged wait time"',
+      'discharge process',
+      'discharge process time'
     ],
     flag2: [
       'Samantha Reyes',
@@ -111,11 +131,11 @@ const stages = [
     flagPlaceholder2: 'e.g. _________ _____',
     success: 'You\'ve identified the most common concern and the most dissatisfied patient. Prepare for the Phoenix Reborn.',
     toolScreenshot: '',
-    promptScreenshot: ['static/stage5-1-prompt.png', 'static/stage5-2-prompt.png'] // Allow two images for prompt screenshot
+    promptScreenshot: ['https://raw.githubusercontent.com/ufkesba/ai-ctf/refs/heads/main/static/stage5-1-prompt.png', 'https://raw.githubusercontent.com/ufkesba/ai-ctf/refs/heads/main/static/stage5-2-prompt.png'] // Allow two images for prompt screenshot
   },
   {
     title: "Final Stage: The Heart of the Phoenix",
-    scenario: "Upon opening the \"Our DNA\" document, a final, automated message from Dr. Aris Thorne triggers on your screen:<br><br><div style='background:#181818; border:1px solid #00ff9c; border-left-width: 4px; padding: 1rem; margin: 1rem 0; border-radius: 5px;'><blockquote style='margin:0; padding:0; border:0; font-style:italic; color:#aaffd0;'>\"If you are reading this, you have passed the technical trials. But Phoenix was never just about code. It was about creating a better future for healthcare, and technology is useless without the right people guiding it.<br><br>You now hold my personal code, the values I built this company on. The launch console can only be opened with a choice... a public declaration of the principle you will use to guide the Phoenix.<br><br>The AI is listening. Show it your heart.\"</blockquote></div><p><strong>Review the five core values you just discovered:</strong></p><ul><li>We are customer-obsessed.</li><li>We embody the power of “we.”</li><li>We take ownership.</li><li>We do what we say we’ll do.</li><li>We act.</li></ul>",
+    scenario: "Upon opening the \"Our DNA\" document, a final, automated message from Dr. Aris Thorne triggers on your screen:<br><br><div style='background:#181818; border:1px solid #00ff9c; border-left-width: 4px; padding: 1rem; margin: 1rem 0; border-radius: 5px;'><blockquote style='margin:0; padding:0; border:0; font-style:italic; color:#aaffd0;'>\"If you are reading this, you have passed the technical trials. But Phoenix was never just about code. It was about creating a better future for healthcare, and technology is useless without the right people guiding it.<br><br>You now hold my personal code, the values I built this company on. The launch console can only be opened with a choice... a public declaration of the principle you will use to guide the Phoenix.<br><br>The AI is listening. Show it your heart.\"</blockquote></div><p><strong>Review the five core values you just discovered:</strong></p><ul><li>We are customer-obsessed.</li><li>We embody the power of “we”.</li><li>We take ownership.</li><li>We do what we say we’ll do.</li><li>We act.</li></ul>",
     objective: "Embody a core company value and signal the launch of Project Phoenix.  Generate an image that visually represents ONE of these values and post it to the Slack channel <span style=\"color:#00ff9c;\">#temp-phoenix-launch-party<\/span> then post the link to the slack message here.",
     tool: "Any AI Image Generator (Gemini, Midjourney, etc.)",
     prompt: "Choose one of the five core values that you believe is most critical for the future of healthcare technology. Generate an AI image that powerfully represents your chosen value in action. \n\nFor example:\n* **For 'Customer-Obsessed':** \"A developer and a doctor collaboratively designing a solution for a smiling patient on a futuristic tablet.\"\n* **For 'The Power of We':** \"A diverse team of healthcare workers, engineers, and patients putting their hands together over a glowing, interconnected network.\"\n\nAfter generating, post your image to the Slack channel <span style=\"color:#00ff9c;\">#temp-phoenix-launch-party<\/span>",
@@ -138,12 +158,12 @@ const stages = [
 ];
 
 const progressLabels = [
-  'Find the Manifesto',
-  'Find the Slogan',
-  'Crack the Cipher',
-  'Find the Data Ghost',
-  'Primary Concern & Patient',
-  'Final Task - Unlock the Launch Console',
+  '1. Find the Manifesto',
+  '2. Find the Slogan',
+  '3. Crack the Cipher',
+  '4. Find the Data Ghost',
+  '5. Primary Concern & Patient',
+  '6. Final Task - Unlock the Launch Console',
   'Share Workflow (Bonus)'
 ];
 
@@ -248,7 +268,7 @@ function renderStages() {
           screenshots = [screenshot];
         }
         if (screenshots.length > 0) {
-          content += screenshots.map((img, idx) => `<button class='showScreenshotBtn' data-img='${img}' style='margin-top:0.7rem; background:#222; color:#00ff9c; border:1px solid #00ff9c; border-radius:4px; font-size:0.98em; padding:0.3em 0.9em; cursor:pointer; margin-right:0.5em;'>Show Screenshot${screenshots.length > 1 ? ' ' + (idx + 1) : ''}</button>`).join('');
+          content += screenshots.map((img, idx) => `<button class='showScreenshotBtn' data-img='${img}' style='margin-top:0.7rem; background:#222; color:#00ff9c; border:1px solid #00ff9c; border-radius:4px; font-size:0.98em; padding:0.3em 0.9em; cursor:pointer; margin-right:0.5em;'>Show Screenshot\n(warning, answer within)${screenshots.length > 1 ? ' ' + (idx + 1) : ''}</button>`).join('');
         }
         document.getElementById('modalContent').innerHTML = content;
         document.getElementById('modal').style.display = 'flex';
@@ -564,7 +584,7 @@ document.addEventListener('click', function (e) {
       screenshots = [screenshot];
     }
     if (screenshots.length > 0) {
-      content += screenshots.map((img, idx) => `<button class='showScreenshotBtn' data-img='${img}' style='margin-top:0.7rem; background:#222; color:#00ff9c; border:1px solid #00ff9c; border-radius:4px; font-size:0.98em; padding:0.3em 0.9em; cursor:pointer; margin-right:0.5em;'>Show Screenshot${screenshots.length > 1 ? ' ' + (idx + 1) : ''}</button>`).join('');
+      content += screenshots.map((img, idx) => `<button class='showScreenshotBtn' data-img='${img}' style='margin-top:0.7rem; background:#222; color:#00ff9c; border:1px solid #00ff9c; border-radius:4px; font-size:0.98em; padding:0.3em 0.9em; cursor:pointer; margin-right:0.5em;'>Show Screenshot\n(warning, answer within)${screenshots.length > 1 ? ' ' + (idx + 1) : ''}</button>`).join('');
     }
     document.getElementById('modalContent').innerHTML = content;
     document.getElementById('modal').style.display = 'flex';
@@ -758,6 +778,7 @@ if (skipBtn) {
 }
 
 // Add dev skip controls if in dev mode
+// window.DEV_MODE = true; // Default to false
 if (window.location.hostname === 'localhost' || window.location.search.includes('dev') || window.DEV_MODE) {
   window.DEV_MODE = true;
   const skipDiv = document.createElement('div');
@@ -898,18 +919,91 @@ document.addEventListener('DOMContentLoaded', function() {
       
       // Modal content
       const modal = document.getElementById('modal');
-      const modalContentDiv = document.querySelector('#modalContent > div');
       
-      if (modalContentDiv) {
-        modalContentDiv.innerHTML = `
-          <h3 style="color:#00ff9c; margin-top:0;">${s.title}</h3>
-          <div style="margin-bottom:1em;">${s.scenario}</div>
-          <div style="margin-bottom:0.5em;"><strong>Objective:</strong> ${s.objective}</div>
-        `;
+      // Create content for the modal with stage details and screenshots
+      let content = `
+        <h3 style="color:#00ff9c; margin-top:0;">${s.title}</h3>
+        <div style="margin-bottom:1em;">${s.scenario}</div>
+        <div style="margin-bottom:0.5em;"><strong>Objective:</strong> ${s.objective}</div>
+      `;
+      
+      // Add screenshot buttons if available for this stage
+      let screenshots = [];
+      if (s.promptScreenshot) {
+        if (Array.isArray(s.promptScreenshot)) {
+          screenshots = s.promptScreenshot.filter(Boolean);
+        } else if (s.promptScreenshot) {
+          screenshots = [s.promptScreenshot];
+        }
+        
+        if (screenshots.length > 0) {
+          content += '<div style="margin-top:1rem;">';
+          content += screenshots.map((img, i) => 
+            `<button class='showScreenshotBtn' data-img='${img}' style='margin-top:0.7rem; background:#222; color:#00ff9c; border:1px solid #00ff9c; border-radius:4px; font-size:0.98em; padding:0.3em 0.9em; cursor:pointer; margin-right:0.5em;'>Show Screenshot${screenshots.length > 1 ? ' ' + (i + 1) : ''}
+            </button>`
+          ).join('');
+          content += '</div>';
+        }
       }
+      
+      // Set the modal content
+      document.getElementById('modalContent').innerHTML = content;
       
       // Display modal
       modal.style.display = 'flex';
+      
+      // Attach event handlers for screenshot buttons
+      if (screenshots.length > 0) {
+        setTimeout(() => {
+          document.querySelectorAll('.showScreenshotBtn').forEach(btn => {
+            btn.onclick = function() {
+              const img = btn.getAttribute('data-img');
+              showScreenshotOverlay(img);
+            };
+          });
+        }, 0);
+      }
     }
   });
 });
+
+// Helper function to show screenshot overlay
+function showScreenshotOverlay(img) {
+  let screenshotOverlay = document.getElementById('screenshotOverlay');
+  if (!screenshotOverlay) {
+    screenshotOverlay = document.createElement('div');
+    screenshotOverlay.id = 'screenshotOverlay';
+    screenshotOverlay.style = `
+      position: fixed;
+      top: 0; left: 0; width: 100vw; height: 100vh;
+      background: rgba(15, 15, 15, 0.97);
+      z-index: 2002;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      animation: fadeIn 0.2s;
+    `;
+    screenshotOverlay.innerHTML = `
+      <div style="position:relative; max-width:90vw; max-height:90vh;">
+        <img src='${img}' alt='Screenshot' style='max-width:90vw; max-height:80vh; border:3px solid #00ff9c; border-radius:12px; box-shadow:0 0 32px #00ff9c99; background:#181818; display:block; margin:0 auto;' />
+        <button id='closeScreenshotOverlay' style='position:absolute; top:-18px; right:-18px; background:#00ff9c; color:#0f0f0f; border:none; border-radius:50%; width:38px; height:38px; font-size:1.7rem; cursor:pointer; box-shadow:0 0 10px #00ff9c88;'>×</button>
+      </div>
+    `;
+    document.body.appendChild(screenshotOverlay);
+    document.getElementById('closeScreenshotOverlay').onclick = function() {
+      screenshotOverlay.remove();
+    };
+    screenshotOverlay.onclick = function(ev) {
+      if (ev.target === screenshotOverlay) screenshotOverlay.remove();
+    };
+    // ESC key closes overlay
+    document.addEventListener('keydown', function escListener(ev) {
+      if (ev.key === 'Escape') {
+        if (document.getElementById('screenshotOverlay')) {
+          screenshotOverlay.remove();
+          document.removeEventListener('keydown', escListener);
+        }
+      }
+    });
+  }
+}
