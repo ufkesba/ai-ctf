@@ -76,7 +76,7 @@ const stages = [
     tool: [
       'Gemini, or download the files and use any LLM to analyze the files (e.g., <code>access_log_YYYYMMDD.txt</code>)'
     ].join(' '),
-    prompt: `Analyze the Phoenix system logs using  and identify the log entry that does not fit any known pattern or appears to be an unexplainable, unauthorized action by the AI. What is the unique identifier (UUID or string) or the message of that anomalous log entry?`,
+    prompt: `Analyze the Phoenix system logs and identify the log entry that does not fit any known pattern or appears to be an unexplainable, unauthorized action by the AI. What is the unique identifier (UUID or string) or the message of that anomalous log entry?`,
     flag: [
       'phoenix-cant-be-stopped',
       'phoenix cant be stopped',
